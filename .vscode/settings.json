@@ -1,0 +1,19 @@
+{
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "eslint.validate": ["vue", "html", "javascript", "typescript"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#4165AA",
+    "activityBar.foreground": "#e7eff6",
+    "activityBar.inactiveForeground": "#000",
+    "activityBarBadge.background": "#FFCA39",
+    "activityBarBadge.foreground": "#4165AA",
+    "statusBar.background": "#4165AA",
+    "statusBarItem.hoverBackground": "#4165AA",
+    "statusBar.foreground": "#000"
+  },
+  "workbench.iconTheme": "vscode-icons"
+}

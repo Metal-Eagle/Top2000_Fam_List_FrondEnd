@@ -1,0 +1,87 @@
+:root {
+  --background-color: #fff;
+  --letter-color: #d91f27;
+  --hover-color: #ffc8cd;
+  --highlight-color: #E6E6E5;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--letter-color)
+}
+
+.bg-main {
+  background-color: var(--letter-color) !important;
+}
+
+.main-badge {
+  color: var(--highlight-color);
+  border-radius: 15px;
+  padding: 0.5rem;
+  font-size: 0.8em;
+}
+
+.stepper {
+  background-color: var(--highlight-color);
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.table {
+  background-color: var(--highlight-color);
+  border-radius: 10px;
+}
+
+.btn-outline-main {
+  color: var(--letter-color);
+  border-color: var(--letter-color);
+  outline: 0;
+
+}
+
+.btn-outline-main:hover {
+  color: #000;
+  background-color: var(--letter-color);
+  border-color: var(--hover-color);
+}
+
+.btn-active {
+  color: #fff;
+  background-color: var(--letter-color);
+}
+
+.btn-outline-main:focus,
+.btn-outline-main:active {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.blink-me {
+  background-color: var(--highlight-color);
+  color: #000;
+  animation: blinker 1.7s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+
+@keyframes blinker {
+  to {
+    opacity: 0;
+  }
+}
+
+.btn-spotify {
+  font-family: Circular,
+    Helvetica,
+    Arial,
+    sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 500px;
+  padding: 11px 32px 9px;
+  color: #fff;
+  background-color: #1db954;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: normal;
+  border-color: #1aa34a;
+
+}
