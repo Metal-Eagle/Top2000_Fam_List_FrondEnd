@@ -1,9 +1,7 @@
 TODO:
 
-- [x] use secret for updating
 - [ ] Add year for users
 - [ ] Add new user
-- [x] check if spotify token is valit
 - [ ] Make songs clickable for more info
 
 ## Docker command
