@@ -12,13 +12,11 @@
     <table class="table table-striped table-hover" v-if="getTopSongs">
       <thead>
         <tr>
-          <th scope="col">Cover</th>
           <th scope="col">Artist</th>
           <th scope="col">Title</th>
           <th scope="col">Voters</th>
           <th scope="col">Total votes</th>
           <th scope="col"></th>
-          <th scope="col">Controls</th>
         </tr>
       </thead>
       <tbody>
