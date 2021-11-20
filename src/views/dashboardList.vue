@@ -3,13 +3,16 @@
   <navBar />
   <loading :loading="!getSongs" />
   <div class="row" v-if="getMainName">
-    <div class="h1 col text-end">
+    <div class="h1 col-6 text-end">
       {{ getMainName }}
     </div>
-    <div class="h6 col text-start">
+    <div class="h6 col-4 text-start">
       <span class="main-badge bg-main rounded-pill" style="width: 6rem">{{
         getSongsCount
       }}</span>
+    </div>
+    <div class="col-2">
+      <showModelForAddingYears></showModelForAddingYears>
     </div>
   </div>
 
@@ -59,6 +62,7 @@ import Song from "@/components/song";
 import loading from "@/components/loading";
 import navBar from "@/components/navBar";
 import alert from "@/components/alert";
+import showModelForAddingYears from "@/components/showModelForAddingYears.vue";
 
 export default {
   components: {
@@ -66,6 +70,7 @@ export default {
     loading,
     navBar,
     alert,
+    showModelForAddingYears,
   },
   computed: {
     ...mapGetters(["getMainName", "getSongsCount", "getAllSongs"]),

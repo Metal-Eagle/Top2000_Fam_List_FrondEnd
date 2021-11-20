@@ -4,6 +4,9 @@ const getters = {
   getUserById: (state) => (id) => {
     return state.users.find((users) => users.id === id);
   },
+  getIdByFullName: (state) => (fullName) => {
+    return state.users.find((users) => users.fullName === fullName).id;
+  },
   getSongsCount: (state) => {
     if (state.songs === null) return 0;
     return state.songs.length;

@@ -70,7 +70,7 @@
           <input
             class="form-control"
             v-model="year.vote_year"
-            placeholder="year"
+            placeholder="Year"
           />
           <input
             class="form-control"
