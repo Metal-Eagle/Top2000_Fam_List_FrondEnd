@@ -5,7 +5,6 @@
     class="btn btn-outline-main"
     data-bs-toggle="modal"
     data-bs-target="#addNewUser"
-    @click="atClickGetUsers"
   >
     Add User
   </div>
@@ -20,7 +19,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addNewUserLabel">Add a new User</h5>
+          <h5 class="modal-title" id="addNewUserLabel">Add a new Member</h5>
           <button
             type="button"
             class="btn-close"
@@ -30,10 +29,33 @@
         </div>
         <div class="modal-body">
           <div v-if="loading" class="mb-3 text-center">
-            Getting data please wait...
+            Setting up user please wait..
           </div>
-          TEST!
+
+          <input
+            class="form-control mb-1"
+            v-model="user.secret"
+            placeholder="The family secret"
+          />
+
+          <input
+            class="form-control mb-1"
+            v-model="user.fullName"
+            placeholder="Member"
+          />
+          <input
+            class="form-control mb-1"
+            v-model="user.year[0].vote_year"
+            type="number"
+            placeholder="Year"
+          />
+          <input
+            class="form-control mb-1"
+            v-model="user.year[0].vote_url"
+            placeholder="https://stem.nporadio2.nl/top2000-2020/share/v8hb9hvov8hb9hvoxl3hzxq33ddhxl3hzxq33ddh"
+          />
         </div>
+
         <div class="modal-footer">
           <button
             type="button"
@@ -48,7 +70,7 @@
             class="btn btn-outline-main"
             @click="atSave()"
           >
-            Save changes
+            Add Member
           </button>
         </div>
       </div>
@@ -58,16 +80,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { addUser } from "@/service/uploadData";
 
 export default {
   name: "Add Year Modal",
   data() {
     return {
-      users: [],
       loading: false,
-      selectedUser: null,
       user: {
-        id: null,
+        fullName: null,
         secret: null,
         familyId: null,
         year: [
@@ -80,20 +101,23 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      "getUserById",
-      "getVottersFormSongs",
-      "getIdByFullName",
-      "getMainId",
-    ]),
+    ...mapGetters(["getMainId"]),
   },
   methods: {
     changeSelected() {
       const userId = this.getIdByFullName(this.selectedUser);
       this.user.id = userId;
     },
-    atClickGetUsers() {},
-    atSave() {},
+    atSave() {
+      this.user.familyId = this.getMainId;
+
+      addUser(this.user, () => {
+        setTimeout(() => {
+          location.reload();
+          this.loading = false;
+        }, 5000);
+      });
+    },
   },
 };
 </script>

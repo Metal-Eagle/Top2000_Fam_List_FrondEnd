@@ -67,4 +67,30 @@ async function updateUser(user, cb) {
     });
 }
 
-export { addFamily, addSpotifyList, updateUser };
+async function addUser(user, cb) {
+  const list = {
+    familyId: user.familyId,
+    fullName: user.fullName,
+    secret: user.secret,
+    years: user.year,
+  };
+  const config = {
+    method: "post",
+    url: `${backEndUrl}/api/v1/user`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(list),
+  };
+
+  axios(config)
+    .then((resp) => {
+      cb(resp.data);
+    })
+    .catch((err) => {
+      console.error("ERROR", err);
+      cb(err);
+    });
+}
+
+export { addFamily, addSpotifyList, updateUser, addUser };

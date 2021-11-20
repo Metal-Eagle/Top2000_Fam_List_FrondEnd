@@ -48,7 +48,7 @@
             <input
               class="form-control mt-1"
               v-model="user.secret"
-              placeholder="The famaly secret"
+              placeholder="The family secret"
             />
 
             <input
@@ -78,7 +78,7 @@
             class="btn btn-outline-main"
             @click="atSave()"
           >
-            Save changes
+            Add Year
           </button>
         </div>
       </div>

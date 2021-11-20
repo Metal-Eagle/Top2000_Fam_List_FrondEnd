@@ -6,14 +6,17 @@
     <div class="h1 col-6 text-end">
       {{ getMainName }}
     </div>
-    <div class="h6 col-4 text-start">
+    <div class="h6 col">
       <span class="main-badge bg-main rounded-pill" style="width: 6rem">{{
         getSongsCount
       }}</span>
     </div>
-    <div class="col-2">
-      <showModelForAddingYears />
-      <addNewUser />
+
+    <div class="col-md-auto mb-1">
+      <div class="btn-group">
+        <showModelForAddingYears />
+        <addNewUser />
+      </div>
     </div>
   </div>
 
