@@ -122,7 +122,6 @@ export default {
     changeSelected() {
       const userId = this.getIdByFullName(this.selectedUser);
       this.user.id = userId;
-      console.log(this.user);
     },
     atClickGetUsers() {
       //   Clear users at click
@@ -134,8 +133,6 @@ export default {
     },
     atSave() {
       this.user.familyId = this.getMainId;
-      console.log(JSON.stringify(this.user));
-
       this.loading = true;
       updateUser(this.user, (r) => {
         if (r.message === "Request failed with status code 409") {
