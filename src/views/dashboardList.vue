@@ -12,7 +12,8 @@
       }}</span>
     </div>
     <div class="col-2">
-      <showModelForAddingYears></showModelForAddingYears>
+      <showModelForAddingYears />
+      <addNewUser />
     </div>
   </div>
 
@@ -63,6 +64,7 @@ import loading from "@/components/loading";
 import navBar from "@/components/navBar";
 import alert from "@/components/alert";
 import showModelForAddingYears from "@/components/showModelForAddingYears.vue";
+import addNewUser from "@/components/addNewUser.vue";
 
 export default {
   components: {
@@ -71,6 +73,7 @@ export default {
     navBar,
     alert,
     showModelForAddingYears,
+    addNewUser,
   },
   computed: {
     ...mapGetters(["getMainName", "getSongsCount", "getAllSongs"]),
