@@ -43,12 +43,13 @@
             v-model="user.fullName"
             placeholder="Member"
           />
-          <input
+          <!-- <input
             class="form-control mb-1"
             v-model="user.year[0].vote_year"
             type="number"
             placeholder="Year"
-          />
+          /> -->
+          <yearSelector v-model:year="user.year[0].vote_year" />
           <input
             class="form-control mb-1"
             v-model="user.year[0].vote_url"
@@ -81,8 +82,12 @@
 <script>
 import { mapGetters } from "vuex";
 import { addUser } from "@/service/uploadData";
+import yearSelector from "./yearSelector.vue";
 
 export default {
+  components: {
+    yearSelector,
+  },
   name: "Add Year Modal",
   data() {
     return {
