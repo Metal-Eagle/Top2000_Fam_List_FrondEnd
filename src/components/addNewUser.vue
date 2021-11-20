@@ -65,7 +65,7 @@
             Close
           </button>
           <button
-            :disabled="loading ?? ''"
+            :disabled="!checkIfReadyForpost ?? ''"
             type="button"
             class="btn btn-outline-main"
             @click="atSave()"
@@ -87,6 +87,7 @@ export default {
   data() {
     return {
       loading: false,
+      errorMsg: null,
       user: {
         fullName: null,
         secret: null,
@@ -102,6 +103,18 @@ export default {
   },
   computed: {
     ...mapGetters(["getMainId"]),
+    checkIfReadyForpost: function () {
+      let validInput = false;
+      if (
+        this.user.fullName !== null &&
+        this.user.secret !== null &&
+        this.user.year[0].vote_year !== null &&
+        this.user.year[0].vote_url !== null
+      ) {
+        validInput = true;
+      }
+      return validInput;
+    },
   },
   methods: {
     changeSelected() {
