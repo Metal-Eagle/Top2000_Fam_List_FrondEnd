@@ -16,7 +16,7 @@ async function addFamily(list, cb) {
       cb(resp.data);
     })
     .catch((err) => {
-      console.log("ERROR", err);
+      console.error("ERROR", err);
       cb(err);
     });
 }
@@ -41,7 +41,7 @@ async function addSpotifyList(spotifyList, cb) {
     });
 }
 
-async function addUser(user, cb) {
+async function updateUser(user, cb) {
   const list = {
     familyId: user.familyId,
     userId: user.id,
@@ -62,9 +62,9 @@ async function addUser(user, cb) {
       cb(resp.data);
     })
     .catch((err) => {
-      console.log("ERROR", err);
+      console.error("ERROR", err);
       cb(err);
     });
 }
 
-export { addFamily, addSpotifyList, addUser };
+export { addFamily, addSpotifyList, updateUser };

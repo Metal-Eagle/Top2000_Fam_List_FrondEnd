@@ -15,7 +15,6 @@ const actions = {
     //Token expiry  in 1 hour
     let expires_in_ms = token.expires_in * 1000;
     token.expiresAt = +new Date().getTime() + expires_in_ms;
-    console.log("Spotify Token", token);
     commit("ADDSPOTIFYACCESSTOKEN", token);
   },
   add_spotify_user({ commit }, users) {

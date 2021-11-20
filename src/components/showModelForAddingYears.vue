@@ -88,7 +88,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { addUser } from "@/service/uploadData";
+import { updateUser } from "@/service/uploadData";
 
 export default {
   name: "Add Year Modal",
@@ -137,7 +137,7 @@ export default {
       console.log(JSON.stringify(this.user));
 
       this.loading = true;
-      addUser(this.user, (r) => {
+      updateUser(this.user, (r) => {
         if (r.message === "Request failed with status code 409") {
           this.loading = false;
         } else {

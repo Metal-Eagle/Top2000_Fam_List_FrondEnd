@@ -143,23 +143,23 @@ export default {
         playList: this.playList,
       };
 
-      const originalText = document.getElementById("addSpotifyItem_loader")
-        .innerHTML;
+      const originalText = document.getElementById(
+        "addSpotifyItem_loader"
+      ).innerHTML;
       document.getElementById(
         "addSpotifyItem_loader"
       ).innerHTML = `<div class="spinner-border"/>`;
 
       addSpotifyList(spotifyList, (r) => {
         if (r.name === "Error") {
-          console.log(r.message);
+          console.error(r.message);
           this.$store.dispatch("show_error_msg", {
             msg: r.message,
           });
         }
 
-        document.getElementById(
-          "addSpotifyItem_loader"
-        ).innerHTML = originalText;
+        document.getElementById("addSpotifyItem_loader").innerHTML =
+          originalText;
       });
     },
   },
