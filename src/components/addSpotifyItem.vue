@@ -80,7 +80,8 @@
 
           <div class="alert alert-info" role="alert">
             <strong>Note!</strong> it can take some time for the playlist to be
-            created
+            and if it fails to add all songs to your playlist please try again
+            😉 created
           </div>
 
           <!-- Modal Body -->
