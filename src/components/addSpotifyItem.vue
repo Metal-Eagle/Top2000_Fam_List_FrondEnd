@@ -52,13 +52,13 @@
           </div>
 
           <!-- TODO: Make working -->
-          <!-- <div class="form-floating">
+          <div class="form-floating">
             <select
               class="form-select form-select-sm mb-2"
-              v-model="playList.selectedVotter"
+              v-model="selectedVotter"
             >
               <option selected>All</option>
-              <option v-for="votter in getVottersFormSongs" :key="votter">
+              <option v-for="votter in getVottersFormSongs" :key="votter.id">
                 {{ getUserById(votter).fullName }}
               </option>
             </select>
@@ -68,7 +68,7 @@
           <div class="form-floating">
             <select
               class="form-select form-select-sm mb-2"
-              v-model="playList.selectedYear"
+              v-model="selectedYear"
             >
               <option selected>All</option>
               <option v-for="year in getYearsFormSongs" :key="year">
@@ -76,7 +76,7 @@
               </option>
             </select>
             <label for="floatingSelect">Select Year</label>
-          </div> -->
+          </div>
 
           <div class="alert alert-info" role="alert">
             <strong>Note!</strong> it can take some time for the playlist to be
@@ -109,12 +109,14 @@ import { addSpotifyList } from "../service/uploadData.js";
 export default {
   data() {
     return {
+      selectedVotter: "All",
+      selectedYear: "All",
       playList: {
         name: null,
         description: null,
         public: false,
-        selectedYear: "All",
-        selectedVotter: "All",
+        years: null,
+        votter: null,
       },
     };
   },
@@ -132,10 +134,19 @@ export default {
       "getSpotifyAccessToken",
       "getSpotifyUser",
       "getMainId",
+      "getIdByFullName",
     ]),
   },
   methods: {
     async sendData() {
+      if (this.selectedVotter !== "All") {
+        this.playList.votter = this.getIdByFullName(this.selectedVotter);
+      }
+
+      if (this.selectedYear !== "All") {
+        this.playList.years = this.selectedYear;
+      }
+
       const spotifyList = {
         familyId: this.getMainId,
         id: this.getSpotifyUser.id,
