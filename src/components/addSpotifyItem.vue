@@ -115,7 +115,7 @@ export default {
         name: null,
         description: null,
         public: false,
-        years: null,
+        year: null,
         votter: null,
       },
     };
@@ -144,7 +144,7 @@ export default {
       }
 
       if (this.selectedYear !== "All") {
-        this.playList.years = this.selectedYear;
+        this.playList.year = this.selectedYear;
       }
 
       const spotifyList = {
