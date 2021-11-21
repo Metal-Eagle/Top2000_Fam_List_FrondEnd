@@ -47,7 +47,6 @@
             <th scope="col">Title</th>
             <th scope="col">Voter</th>
             <th scope="col">Year</th>
-            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -79,7 +78,12 @@ export default {
     addNewUser,
   },
   computed: {
-    ...mapGetters(["getMainName", "getSongsCount", "getAllSongs"]),
+    ...mapGetters([
+      "getMainName",
+      "getSongsCount",
+      "getAllSongs",
+      "getIdByFullName",
+    ]),
     getSongs() {
       if (this.searchNumberInput !== null) {
         let data;
@@ -96,6 +100,11 @@ export default {
               r.artist
                 .toLowerCase()
                 .includes(this.searchNumberInput.toLowerCase())
+            );
+            break;
+          case "year":
+            data = this.getAllSongs.filter((r) =>
+              `${r.voteYear}`.includes(this.searchNumberInput)
             );
             break;
         }
@@ -117,6 +126,11 @@ export default {
         {
           name: "Artist",
           value: "artist",
+          selected: false,
+        },
+        {
+          name: "Year",
+          value: "year",
           selected: false,
         },
       ],
