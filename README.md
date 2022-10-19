@@ -1,7 +1,5 @@
 TODO:
 
-- [ ] Add year for users
-- [ ] Add new user
 - [ ] Make songs clickable for more info
 
 ## Docker command
