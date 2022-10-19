@@ -20,7 +20,12 @@
         </div>
         <div class="modal-body" v-if="selectedSong">
           <!-- TODO: check if img is there  -->
-          <img :src="selectedSong.imageBig" alt="cover" class="img-fluid" />
+          <img
+            v-if="selectedSong.imageBig"
+            :src="selectedSong.imageBig"
+            alt="cover"
+            class="img-fluid"
+          />
         </div>
         <div class="modal-footer">
           <button
