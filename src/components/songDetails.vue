@@ -50,6 +50,7 @@
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
+            @click="pauseSong"
           >
             Close
           </button>
@@ -91,6 +92,12 @@ export default {
       }
 
       this.$store.dispatch("change_playing_song", song);
+    },
+    pauseSong() {
+      if (this.playingSong.isPlaying) {
+        this.playingSong.Audio.pause();
+        this.playingSong.isPlaying = false;
+      }
     },
   },
   computed: {
