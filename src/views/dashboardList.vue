@@ -50,13 +50,22 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in getSongs" :key="item.id">
+          <tr
+            v-for="item in getSongs"
+            :key="item.id"
+            class="songClick"
+            @click="openExtraDetails(item)"
+            data-bs-toggle="modal"
+            data-bs-target="#songDetailsModal"
+          >
             <Song :item="item" />
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <!-- Add modal for details -->
+  <songDetails :selectedSong="selectedItem" />
 </template>
 
 <script>
@@ -67,6 +76,7 @@ import navBar from "@/components/navBar";
 import alert from "@/components/alert";
 import showModelForAddingYears from "@/components/showModelForAddingYears.vue";
 import addNewUser from "@/components/addNewUser.vue";
+import songDetails from "@/components/songDetails.vue";
 
 export default {
   components: {
@@ -76,6 +86,7 @@ export default {
     alert,
     showModelForAddingYears,
     addNewUser,
+    songDetails,
   },
   computed: {
     ...mapGetters([
@@ -115,6 +126,12 @@ export default {
       }
     },
   },
+  methods: {
+    openExtraDetails(item) {
+      console.log("Get Id", item);
+      this.selectedItem = item;
+    },
+  },
   data() {
     return {
       selectorOptions: [
@@ -136,6 +153,7 @@ export default {
       ],
       selectedOption: "title",
       searchNumberInput: null,
+      selectedItem: null,
     };
   },
 };
