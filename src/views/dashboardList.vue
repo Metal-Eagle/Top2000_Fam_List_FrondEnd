@@ -128,7 +128,6 @@ export default {
   },
   methods: {
     openExtraDetails(item) {
-      console.log("Get Id", item);
       this.selectedItem = item;
     },
   },
