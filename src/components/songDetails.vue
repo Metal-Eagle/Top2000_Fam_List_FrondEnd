@@ -26,6 +26,24 @@
             alt="cover"
             class="img-fluid"
           />
+
+          <div v-if="selectedSong.audio" class="mt-3 text-center">
+            <button
+              @click="playSong(selectedSong.audio, selectedSong.id)"
+              class="btn btn-outline-main"
+            >
+              <Play
+                v-if="
+                  !playingSong.isPlaying || selectedSong.id !== playingSong.id
+                "
+              />
+              <Pause
+                v-if="
+                  playingSong.isPlaying && selectedSong.id === playingSong.id
+                "
+              />
+            </button>
+          </div>
         </div>
         <div class="modal-footer">
           <button
@@ -42,9 +60,41 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { Play, Pause } from "mdue";
 export default {
   props: {
     selectedSong: Object,
+  },
+  components: {
+    Play,
+    Pause,
+  },
+  methods: {
+    playSong(audio, id) {
+      let song = {
+        id: id,
+        isPlaying: true,
+        isFirstSongPlaying: false,
+        Audio: new Audio(audio),
+      };
+
+      if (this.playingSong.isPlaying) {
+        this.playingSong.Audio.pause();
+        song.isPlaying = false;
+        if (this.playingSong.id !== id) {
+          song.isPlaying = true;
+          song.Audio.play();
+        }
+      } else {
+        song.Audio.play();
+      }
+
+      this.$store.dispatch("change_playing_song", song);
+    },
+  },
+  computed: {
+    ...mapGetters(["playingSong"]),
   },
 };
 </script>
