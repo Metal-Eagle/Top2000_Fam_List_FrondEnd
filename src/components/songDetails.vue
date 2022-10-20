@@ -22,7 +22,7 @@
         <div class="modal-body" v-if="selectedSong">
           <!-- TODO: check if img is there  -->
           <img
-            v-if="selectedSong.imageBig && !imgError"
+            v-if="!imgError"
             :src="selectedSong.imageBig"
             @error="imageLoadError"
             alt="cover"
@@ -159,6 +159,12 @@ export default {
     imageLoadError() {
       this.imgError = true;
     },
+  },
+  mounted() {
+    const songDetailsModal = document.getElementById("songDetailsModal");
+    songDetailsModal.addEventListener("hidden.bs.modal", () => {
+      this.atClose();
+    });
   },
   computed: {
     ...mapGetters(["playingSong"]),
