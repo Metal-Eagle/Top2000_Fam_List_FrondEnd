@@ -21,7 +21,7 @@
           ></button>
         </div>
 
-        <div class="modal-body" v-if="props.selectedSong">
+        <div class="modal-body" v-if="showDetails">
           <img
             :src="props.selectedSong.imageBig"
             v-if="!imgError"
@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps, onMounted, computed } from "vue";
 
 const imgError = ref(false);
 
@@ -109,6 +109,12 @@ const props = defineProps(["selectedSong"]);
 function atClose() {
   imgError.value = false;
 }
+
+const showDetails = computed(() => {
+  atClose();
+  if (props.selectedSong !== null) return true;
+  return false;
+});
 
 function imageLoadError() {
   imgError.value = true;
