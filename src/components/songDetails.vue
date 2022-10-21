@@ -20,11 +20,11 @@
             @click="atClose"
           ></button>
         </div>
+
         <div class="modal-body" v-if="props.selectedSong">
-          <!-- TODO: check if img is there  -->
           <img
-            v-if="!imgError"
             :src="props.selectedSong.imageBig"
+            v-if="!imgError"
             @error="imageLoadError"
             alt="cover"
             class="img-fluid rounded"
@@ -83,26 +83,6 @@
               />
             </g>
           </svg>
-
-          <div v-if="props.selectedSong.audio" class="mt-3 text-center">
-            <button
-              @click="playSong(props.selectedSong.audio, props.selectedSong.id)"
-              class="btn btn-outline-main"
-            >
-              <Play
-                v-if="
-                  !playingSong.isPlaying ||
-                  props.selectedSong.id !== playingSong.id
-                "
-              />
-              <Pause
-                v-if="
-                  playingSong.isPlaying &&
-                  props.selectedSong.id === playingSong.id
-                "
-              />
-            </button>
-          </div>
         </div>
         <div class="modal-footer">
           <button
@@ -120,42 +100,22 @@
 </template>
 
 <script setup>
-import { Play, Pause } from "mdue";
 import { ref, defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 const imgError = ref(false);
-const props = defineProps(["props.selectedSong"]);
 
-function playSong(audio, id) {
-  let song = {
-    id: id,
-    isPlaying: true,
-    isFirstSongPlaying: false,
-    Audio: new Audio(audio),
-  };
+const props = defineProps(["selectedSong"]);
 
-  if (this.playingSong.isPlaying) {
-    this.playingSong.Audio.pause();
-    song.isPlaying = false;
-    if (this.playingSong.id !== id) {
-      song.isPlaying = true;
-      song.Audio.play();
-    }
-  } else {
-    song.Audio.play();
-  }
-
-  this.$store.dispatch("change_playing_song", song);
-}
 function atClose() {
-  if (!store.playingSong.Audio) {
-    store.playingSong.Audio.pause();
-    store.playingSong.isPlaying = false;
+  if (!store.state.playingSong.Audio) {
+    store.state.playingSong.Audio.pause();
+    store.state.playingSong.isPlaying = false;
   }
-  this.imgError = false;
+  imgError.value = false;
 }
+
 function imageLoadError() {
   imgError.value = true;
 }
@@ -163,7 +123,7 @@ function imageLoadError() {
 onMounted(() => {
   const songDetailsModal = document.getElementById("songDetailsModal");
   songDetailsModal.addEventListener("hidden.bs.modal", () => {
-    this.atClose();
+    atClose();
   });
 });
 </script>
