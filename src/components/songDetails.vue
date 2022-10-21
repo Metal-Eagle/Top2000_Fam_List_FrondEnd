@@ -7,9 +7,10 @@
           <h5
             class="modal-title"
             id="songDetailsModalLabel"
-            v-if="selectedSong"
+            v-if="props.selectedSong"
           >
-            Details of {{ selectedSong.title }} - {{ selectedSong.artist }}
+            Details of {{ props.selectedSong.title }} -
+            {{ props.selectedSong.artist }}
           </h5>
           <button
             type="button"
@@ -19,11 +20,11 @@
             @click="atClose"
           ></button>
         </div>
-        <div class="modal-body" v-if="selectedSong">
+        <div class="modal-body" v-if="props.selectedSong">
           <!-- TODO: check if img is there  -->
           <img
             v-if="!imgError"
-            :src="selectedSong.imageBig"
+            :src="props.selectedSong.imageBig"
             @error="imageLoadError"
             alt="cover"
             class="img-fluid rounded"
@@ -83,19 +84,21 @@
             </g>
           </svg>
 
-          <div v-if="selectedSong.audio" class="mt-3 text-center">
+          <div v-if="props.selectedSong.audio" class="mt-3 text-center">
             <button
-              @click="playSong(selectedSong.audio, selectedSong.id)"
+              @click="playSong(props.selectedSong.audio, props.selectedSong.id)"
               class="btn btn-outline-main"
             >
               <Play
                 v-if="
-                  !playingSong.isPlaying || selectedSong.id !== playingSong.id
+                  !playingSong.isPlaying ||
+                  props.selectedSong.id !== playingSong.id
                 "
               />
               <Pause
                 v-if="
-                  playingSong.isPlaying && selectedSong.id === playingSong.id
+                  playingSong.isPlaying &&
+                  props.selectedSong.id === playingSong.id
                 "
               />
             </button>
@@ -116,63 +119,51 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script setup>
 import { Play, Pause } from "mdue";
-export default {
-  props: {
-    selectedSong: Object,
-  },
-  components: {
-    Play,
-    Pause,
-  },
-  methods: {
-    playSong(audio, id) {
-      let song = {
-        id: id,
-        isPlaying: true,
-        isFirstSongPlaying: false,
-        Audio: new Audio(audio),
-      };
+import { ref, defineProps, onMounted } from "vue";
+import { useStore } from "vuex";
 
-      if (this.playingSong.isPlaying) {
-        this.playingSong.Audio.pause();
-        song.isPlaying = false;
-        if (this.playingSong.id !== id) {
-          song.isPlaying = true;
-          song.Audio.play();
-        }
-      } else {
-        song.Audio.play();
-      }
+const store = useStore();
+const imgError = ref(false);
+const props = defineProps(["props.selectedSong"]);
 
-      this.$store.dispatch("change_playing_song", song);
-    },
-    atClose() {
-      if (!this.playingSong.Audio) {
-        this.playingSong.Audio.pause();
-        this.playingSong.isPlaying = false;
-      }
-      this.imgError = false;
-    },
-    imageLoadError() {
-      this.imgError = true;
-    },
-  },
-  mounted() {
-    const songDetailsModal = document.getElementById("songDetailsModal");
-    songDetailsModal.addEventListener("hidden.bs.modal", () => {
-      this.atClose();
-    });
-  },
-  computed: {
-    ...mapGetters(["playingSong"]),
-  },
-  data() {
-    return {
-      imgError: false,
-    };
-  },
-};
+function playSong(audio, id) {
+  let song = {
+    id: id,
+    isPlaying: true,
+    isFirstSongPlaying: false,
+    Audio: new Audio(audio),
+  };
+
+  if (this.playingSong.isPlaying) {
+    this.playingSong.Audio.pause();
+    song.isPlaying = false;
+    if (this.playingSong.id !== id) {
+      song.isPlaying = true;
+      song.Audio.play();
+    }
+  } else {
+    song.Audio.play();
+  }
+
+  this.$store.dispatch("change_playing_song", song);
+}
+function atClose() {
+  if (!store.playingSong.Audio) {
+    store.playingSong.Audio.pause();
+    store.playingSong.isPlaying = false;
+  }
+  this.imgError = false;
+}
+function imageLoadError() {
+  imgError.value = true;
+}
+
+onMounted(() => {
+  const songDetailsModal = document.getElementById("songDetailsModal");
+  songDetailsModal.addEventListener("hidden.bs.modal", () => {
+    this.atClose();
+  });
+});
 </script>
