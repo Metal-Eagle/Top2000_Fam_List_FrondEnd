@@ -101,18 +101,12 @@
 
 <script setup>
 import { ref, defineProps, onMounted } from "vue";
-import { useStore } from "vuex";
 
-const store = useStore();
 const imgError = ref(false);
 
 const props = defineProps(["selectedSong"]);
 
 function atClose() {
-  if (!store.state.playingSong.Audio) {
-    store.state.playingSong.Audio.pause();
-    store.state.playingSong.isPlaying = false;
-  }
   imgError.value = false;
 }
 
