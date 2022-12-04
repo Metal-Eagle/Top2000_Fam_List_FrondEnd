@@ -110,8 +110,6 @@ export default {
         let data;
         switch (this.selectedOption) {
           case "title":
-            console.log(this.selectedOption);
-
             data = this.getAllSongs.filter((r) =>
               r.title
                 .toLowerCase()
@@ -138,6 +136,27 @@ export default {
     openExtraDetails(item) {
       this.selectedItem = item;
     },
+  },
+  mounted() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    const title = urlParams.get("title");
+    if (title !== null) {
+      this.searchNumberInput = title;
+      this.selectedOption = "title";
+    }
+
+    const artist = urlParams.get("artist");
+    if (artist !== null) {
+      this.searchNumberInput = artist;
+      this.selectedOption = "artist";
+    }
+
+    const year = urlParams.get("year");
+    if (year !== null) {
+      this.selectedYear = year;
+    }
   },
   data() {
     return {
