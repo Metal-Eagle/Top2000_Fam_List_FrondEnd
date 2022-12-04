@@ -38,6 +38,15 @@
           {{ option.name }}
         </option>
       </select>
+      <select class="form-select" v-model="selectedYear">
+        <option
+          v-for="option in getAllVoteYears"
+          :key="option.year"
+          :value="option.year"
+        >
+          {{ option.year }}
+        </option>
+      </select>
     </div>
     <div class="table-responsive">
       <table class="table table-striped table-hover" v-if="getSongs">
@@ -94,12 +103,15 @@ export default {
       "getSongsCount",
       "getAllSongs",
       "getIdByFullName",
+      "getAllVoteYears",
     ]),
     getSongs() {
       if (this.searchNumberInput !== null) {
         let data;
         switch (this.selectedOption) {
           case "title":
+            console.log(this.selectedOption);
+
             data = this.getAllSongs.filter((r) =>
               r.title
                 .toLowerCase()
@@ -113,16 +125,12 @@ export default {
                 .includes(this.searchNumberInput.toLowerCase())
             );
             break;
-          case "year":
-            data = this.getAllSongs.filter((r) =>
-              `${r.voteYear}`.includes(this.searchNumberInput)
-            );
-            break;
         }
-
-        return data;
+        return data.filter((r) => `${r.voteYear}`.includes(this.selectedYear));
       } else {
-        return this.getAllSongs;
+        return this.getAllSongs.filter((r) =>
+          `${r.voteYear}`.includes(this.selectedYear)
+        );
       }
     },
   },
@@ -144,12 +152,8 @@ export default {
           value: "artist",
           selected: false,
         },
-        {
-          name: "Year",
-          value: "year",
-          selected: false,
-        },
       ],
+      selectedYear: "2022",
       selectedOption: "title",
       searchNumberInput: null,
       selectedItem: null,
