@@ -1,4 +1,6 @@
-import { doSpotifyLogin } from "@/service/spotifyService";
+import {
+  doSpotifyLogin
+} from "@/service/spotifyService";
 
 const getters = {
   getUserById: (state) => (id) => {
@@ -10,6 +12,24 @@ const getters = {
   getSongsCount: (state) => {
     if (state.songs === null) return 0;
     return state.songs.length;
+  },
+  getAllVoteYears: (state) => {
+    const setOfYears = new Set()
+    for (let i = 0; i < state.songs.length; i++) {
+      const r = state.songs[i];
+      const toAdd = r.voteYear
+      if (!setOfYears.has(toAdd)) setOfYears.add(toAdd)
+    }
+    const years = []
+
+    for (const item of setOfYears) {
+      years.push({
+        "year": item
+      })
+    }
+
+    return years
+
   },
   getMainName: (state) => {
     return state.mainName;
