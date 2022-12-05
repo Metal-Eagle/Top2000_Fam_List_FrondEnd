@@ -104,6 +104,7 @@ export default {
       "getAllSongs",
       "getIdByFullName",
       "getAllVoteYears",
+      "getLastVoteYear",
     ]),
     getSongs() {
       if (this.searchNumberInput !== null) {
@@ -138,6 +139,9 @@ export default {
     },
   },
   mounted() {
+    // set year
+    this.selectedYear = this.getLastVoteYear;
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
@@ -172,7 +176,7 @@ export default {
           selected: false,
         },
       ],
-      selectedYear: "2022",
+      selectedYear: null,
       selectedOption: "title",
       searchNumberInput: null,
       selectedItem: null,

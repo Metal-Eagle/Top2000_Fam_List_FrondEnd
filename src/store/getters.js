@@ -27,9 +27,24 @@ const getters = {
         "year": item
       })
     }
-
     return years
 
+  },
+  getLastVoteYear: (state) => {
+    const setOfYears = new Set()
+    for (let i = 0; i < state.songs.length; i++) {
+      const r = state.songs[i];
+      const toAdd = r.voteYear
+      if (!setOfYears.has(toAdd)) setOfYears.add(toAdd)
+    }
+
+    const year = new Date().getFullYear();
+    let lastVoteYear = year
+
+    if (!setOfYears.has(year)) {
+      lastVoteYear = year - 1
+    }
+    return lastVoteYear
   },
   getMainName: (state) => {
     return state.mainName;
