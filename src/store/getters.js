@@ -13,13 +13,21 @@ const getters = {
     if (state.songs === null) return 0;
     return state.songs.length;
   },
-  getAllVoteYears: (state) => {
+
+  getSetOfYears: (state) => {
     const setOfYears = new Set()
     for (let i = 0; i < state.songs.length; i++) {
       const r = state.songs[i];
       const toAdd = r.voteYear
       if (!setOfYears.has(toAdd)) setOfYears.add(toAdd)
     }
+    return setOfYears
+  },
+
+
+  getAllVoteYears: (state, getters) => {
+    const setOfYears = getters.getSetOfYears
+
     const years = []
 
     for (const item of setOfYears) {
@@ -30,13 +38,8 @@ const getters = {
     return years
 
   },
-  getLastVoteYear: (state) => {
-    const setOfYears = new Set()
-    for (let i = 0; i < state.songs.length; i++) {
-      const r = state.songs[i];
-      const toAdd = r.voteYear
-      if (!setOfYears.has(toAdd)) setOfYears.add(toAdd)
-    }
+  getLastVoteYear: (state, getters) => {
+    const setOfYears = getters.getSetOfYears
 
     const year = new Date().getFullYear();
     let lastVoteYear = year
@@ -58,7 +61,7 @@ const getters = {
   getAllSongs: (state) => {
     return state.songs;
   },
-  getTopSongs: (state) => {
+  getTopSongs: (state, getters) => {
     let top10Songs = [];
 
     if (state.songs) {
@@ -95,8 +98,10 @@ const getters = {
     top10Songs.sort((a, b) => {
       return b.votes - a.votes;
     });
+    const setOfYears = getters.getSetOfYears
+    const topSongs = top10Songs.filter(r => r.userIds.length >= setOfYears.size + 1)
 
-    return top10Songs;
+    return topSongs;
   },
   getYearsFormSongs: (state) => {
     let years = [];
@@ -106,13 +111,13 @@ const getters = {
     });
     return years;
   },
-  getVottersFormSongs: (state) => {
-    let votters = [];
+  getVotersFormSongs: (state) => {
+    let voters = [];
     state.songs.forEach((e) => {
-      let index = votters.findIndex((j) => j === e.userId);
-      if (index === -1) votters.push(e.userId);
+      let index = voters.findIndex((j) => j === e.userId);
+      if (index === -1) voters.push(e.userId);
     });
-    return votters;
+    return voters;
   },
   getSpotifyAccessToken: (state) => {
     //Check if valid token
