@@ -4,7 +4,7 @@
   <td v-if="item.userId">{{ getUserById(item.userId).fullName }}</td>
   <td v-if="item.userIds">{{ getUsers(item.userIds) }}</td>
   <td>{{ item.voteYear }}</td>
-  <td>{{ item.votes }}</td>
+  <td v-if="item.votes">{{ item.votes }}</td>
 </template>
 
 <script>
