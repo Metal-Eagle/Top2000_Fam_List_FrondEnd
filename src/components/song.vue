@@ -17,7 +17,6 @@ export default {
       let users = [];
       if (userIds !== undefined) {
         userIds.forEach((r) => {
-          console.log(r);
           users.push(this.getUserById(r.userId).fullName);
         });
       }

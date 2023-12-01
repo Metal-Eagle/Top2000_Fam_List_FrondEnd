@@ -117,7 +117,6 @@ const showDetails = computed(() => {
 
 function getImage() {
   const img = props.selectedSong.imageBig;
-  console.log("HERE", img);
   if (img === null) {
     imgError.value = true;
   }
