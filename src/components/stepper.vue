@@ -49,7 +49,7 @@
 </template>
 <script>
 export default {
-  name: "steper",
+  name: "addSteper",
   data() {
     return {
       pageItems: [],
@@ -83,4 +83,3 @@ export default {
   },
 };
 </script>
-

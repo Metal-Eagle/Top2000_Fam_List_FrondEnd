@@ -83,7 +83,7 @@ import { mapGetters } from "vuex";
 import { addUser } from "@/service/uploadData";
 
 export default {
-  name: "Add Year Modal",
+  name: "AddNewUser",
   data() {
     return {
       loading: false,

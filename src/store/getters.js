@@ -136,6 +136,19 @@ const getters = {
   getError: (state) => {
     return state.error;
   },
+  getYearsFromVoters: (state, getters) => {
+
+    let userIds = getters.getVotersFormSongs
+
+    const users = []
+    // Find user By UserId
+    userIds.forEach(r => {
+      const userToAdd = getters.getUserById(r)
+      users.push(userToAdd)
+    })
+    return users;
+  }
+
 };
 
 export default getters;

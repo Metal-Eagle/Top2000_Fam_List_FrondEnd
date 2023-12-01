@@ -11,11 +11,13 @@
 import { mapGetters } from "vuex";
 
 export default {
+  name: "addSong",
   methods: {
     getUsers(userIds) {
       let users = [];
       if (userIds !== undefined) {
         userIds.forEach((r) => {
+          console.log(r);
           users.push(this.getUserById(r.userId).fullName);
         });
       }

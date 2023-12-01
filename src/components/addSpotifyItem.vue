@@ -58,7 +58,7 @@
               v-model="selectedVotter"
             >
               <option selected>All</option>
-              <option v-for="votter in getVottersFormSongs" :key="votter.id">
+              <option v-for="votter in getVotersFormSongs" :key="votter.id">
                 {{ getUserById(votter).fullName }}
               </option>
             </select>
@@ -128,7 +128,7 @@ export default {
   computed: {
     ...mapGetters([
       "getYearsFormSongs",
-      "getVottersFormSongs",
+      "getVotersFormSongs",
       "getUserById",
       "getMainName",
       "getAllSongs",

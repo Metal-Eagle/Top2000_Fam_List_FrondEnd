@@ -12,11 +12,11 @@
 
 <script>
 export default {
+  name: "loadingBar",
   props: {
     loading: Boolean,
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

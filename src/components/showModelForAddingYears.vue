@@ -37,7 +37,7 @@
             v-model="selectedUser"
             @change="changeSelected"
             class="form-select"
-            aria-label="Default select example"
+            aria-label="Default select"
           >
             <option v-for="user in users" :key="user.id">
               {{ user.fullName }}
@@ -91,7 +91,7 @@ import { mapGetters } from "vuex";
 import { updateUser } from "@/service/uploadData";
 
 export default {
-  name: "Add Year Modal",
+  name: "showModelForAddingYears",
   data() {
     return {
       users: [],
@@ -113,7 +113,7 @@ export default {
   computed: {
     ...mapGetters([
       "getUserById",
-      "getVottersFormSongs",
+      "getYearsFromVoters",
       "getIdByFullName",
       "getMainId",
     ]),
@@ -126,10 +126,7 @@ export default {
     atClickGetUsers() {
       //   Clear users at click
       this.users = [];
-
-      this.getVottersFormSongs.forEach((userId) => {
-        this.users.push(this.getUserById(userId));
-      });
+      this.users = this.getYearsFromVoters;
     },
     atSave() {
       this.user.familyId = this.getMainId;
