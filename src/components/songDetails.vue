@@ -23,9 +23,8 @@
 
         <div class="modal-body" v-if="showDetails">
           <img
-            :src="props.selectedSong.imageBig"
+            :src="getImage()"
             v-if="!imgError"
-            @error="imageLoadError"
             alt="cover"
             class="img-fluid rounded"
           />
@@ -116,8 +115,13 @@ const showDetails = computed(() => {
   return false;
 });
 
-function imageLoadError() {
-  imgError.value = true;
+function getImage() {
+  const img = props.selectedSong.imageBig;
+  console.log("HERE", img);
+  if (img === null) {
+    imgError.value = true;
+  }
+  return img;
 }
 
 onMounted(() => {
