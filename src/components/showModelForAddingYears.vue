@@ -113,7 +113,7 @@ export default {
   computed: {
     ...mapGetters([
       "getUserById",
-      "getYearsFromVoters",
+      "getUsersFromSongs",
       "getIdByFullName",
       "getMainId",
     ]),
@@ -126,7 +126,7 @@ export default {
     atClickGetUsers() {
       //   Clear users at click
       this.users = [];
-      this.users = this.getYearsFromVoters;
+      this.users = this.getUsersFromSongs;
     },
     atSave() {
       this.user.familyId = this.getMainId;

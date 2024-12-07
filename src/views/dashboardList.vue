@@ -28,6 +28,16 @@
         class="form-control"
         placeholder="Search for number"
       />
+      <select class="form-select" v-model="selectedUser">
+        <option
+          v-for="option in getUsersFromSongs"
+          :key="option.id"
+          :value="option.id"
+        >
+          {{ option.fullName }}
+        </option>
+      </select>
+
       <select class="form-select" v-model="selectedOption">
         <option
           v-for="option in selectorOptions"
@@ -104,6 +114,7 @@ export default {
       "getAllSongs",
       "getIdByFullName",
       "getAllVoteYears",
+      "getUsersFromSongs",
       "getLastVoteYear",
     ]),
     getSongs() {
@@ -125,11 +136,23 @@ export default {
             );
             break;
         }
-        return data.filter((r) => `${r.voteYear}`.includes(this.selectedYear));
-      } else {
-        return this.getAllSongs.filter((r) =>
+        let filteredSongs = data.filter((r) =>
           `${r.voteYear}`.includes(this.selectedYear)
         );
+        if (this.selectedUser !== null) {
+          filteredSongs = filteredSongs.filter(
+            (song) => song.userId === this.selectedUser
+          );
+        }
+        return filteredSongs;
+      } else {
+        let allSongs = this.getAllSongs.filter((r) =>
+          `${r.voteYear}`.includes(this.selectedYear)
+        );
+        if (this.selectedUser !== null) {
+          allSongs = allSongs.filter((s) => s.userId === this.selectedUser);
+        }
+        return allSongs;
       }
     },
   },
@@ -180,6 +203,7 @@ export default {
       selectedOption: "title",
       searchNumberInput: null,
       selectedItem: null,
+      selectedUser: null,
     };
   },
 };

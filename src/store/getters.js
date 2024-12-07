@@ -136,7 +136,7 @@ const getters = {
   getError: (state) => {
     return state.error;
   },
-  getYearsFromVoters: (state, getters) => {
+  getUsersFromSongs: (state, getters) => {
 
     let userIds = getters.getVotersFormSongs
 
