@@ -74,8 +74,11 @@
         </option>
       </select>
     </div>
+  </div>
+
+  <div class="table-wrapper" v-if="getSongs">
     <div class="table-responsive">
-      <table class="table table-striped table-hover" v-if="getSongs">
+      <table class="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col">Artist</th>
@@ -230,3 +233,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-responsive {
+  min-width: 600px; /* Adjust based on your design */
+}
+</style>
