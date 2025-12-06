@@ -1,7 +1,7 @@
 <template>
   <!-- Modal -->
   <div class="modal fade" id="songDetailsModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5
@@ -22,30 +22,32 @@
         </div>
 
         <div class="modal-body" v-if="showDetails">
-          <img
-            :src="getImage()"
-            v-if="!imgError"
-            alt="cover"
-            class="img-fluid rounded"
-          />
+          <!-- Centered Image -->
+          <div class="text-center mb-4">
+            <img
+              :src="getImage()"
+              v-if="!imgError && getImage()"
+              alt="cover"
+              class="img-fluid rounded shadow"
+              style="max-width: 300px; max-height: 300px"
+              @error="handleImageError"
+            />
 
-          <svg
-            v-if="imgError"
-            class="img-fluid rounded"
-            width="640"
-            height="640"
-            viewBox="0 0 1119.000000 1280.000000"
-          >
-            <metadata>
-              Created by potrace 1.15, written by Peter Selinger 2001-2017
-            </metadata>
-            <g
-              transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
-              fill="#000000"
-              stroke="none"
+            <svg
+              v-else
+              class="img-fluid rounded shadow"
+              width="300"
+              height="300"
+              viewBox="0 0 1119.000000 1280.000000"
+              style="max-width: 300px; max-height: 300px"
             >
-              <path
-                d="M5232 12787 c-39 -18 -167 -186 -349 -457 -247 -368 -442 -606 -773
+              <g
+                transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+                fill="#000000"
+                stroke="none"
+              >
+                <path
+                  d="M5232 12787 c-39 -18 -167 -186 -349 -457 -247 -368 -442 -606 -773
             -944 -690 -704 -1483 -1253 -2435 -1686 -88 -40 -203 -97 -255 -127 -690 -392
             -1142 -1162 -1329 -2266 -132 -773 -116 -1772 40 -2539 33 -165 80 -331 109
             -388 25 -50 67 -82 94 -74 77 23 117 126 231 584 223 896 455 1399 805 1751
@@ -59,9 +61,9 @@
             -827 -227 -1128 -421 -34 -22 -64 -39 -67 -37 -2 3 63 551 146 1219 82 668
             264 2153 404 3300 140 1147 309 2524 375 3060 190 1548 220 1815 220 1949 0
             244 -87 377 -208 318z"
-              />
-              <path
-                d="M9949 11573 c-20 -27 -51 -70 -69 -98 -94 -141 -279 -331 -440 -452
+                />
+                <path
+                  d="M9949 11573 c-20 -27 -51 -70 -69 -98 -94 -141 -279 -331 -440 -452
             -126 -94 -235 -159 -406 -244 -162 -79 -236 -140 -308 -248 -79 -119 -137
             -283 -167 -476 -30 -186 -11 -568 36 -722 31 -105 52 -83 105 112 71 255 125
             372 218 468 82 85 162 119 376 163 224 45 322 79 403 140 17 13 33 24 35 24 2
@@ -70,19 +72,101 @@
             34 72 35 190 1 260 -64 130 -236 255 -437 318 -155 49 -244 61 -444 61 -167
             -1 -194 -3 -285 -27 -55 -15 -135 -45 -179 -67 -44 -22 -81 -38 -82 -37 -2 2
             53 457 121 1012 210 1717 199 1621 186 1666 -17 56 -46 53 -92 -8z"
-              />
-              <path
-                d="M7563 8208 c-11 -13 -40 -52 -63 -88 -63 -94 -238 -265 -350 -339
+                />
+                <path
+                  d="M7563 8208 c-11 -13 -40 -52 -63 -88 -63 -94 -238 -265 -350 -339
             -52 -35 -143 -88 -204 -118 -179 -90 -257 -182 -311 -368 -53 -184 -52 -462 1
             -647 11 -36 33 -18 49 40 80 289 140 390 260 442 23 10 103 32 180 49 137 31
             232 66 268 99 18 16 18 15 13 -8 -3 -14 -35 -271 -71 -571 -74 -606 -73 -589
             -10 -671 60 -80 171 -142 330 -186 88 -25 368 -24 448 1 136 42 230 105 269
             181 29 55 29 137 1 191 -118 225 -608 330 -899 191 l-73 -35 5 27 c4 22 161
             1311 205 1680 9 77 9 108 1 127 -14 31 -23 31 -49 3z"
-              />
-            </g>
-          </svg>
+                />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Statistics Summary -->
+          <div class="row text-center mb-4">
+            <div class="col-6">
+              <div class="p-3 bg-light rounded stats-card">
+                <h2 class="mb-0 text-primary">
+                  {{ totalVotes }}
+                </h2>
+                <small class="text-muted">Total Votes</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 bg-light rounded stats-card">
+                <h2 class="mb-0 text-success">{{ uniqueYears.length }}</h2>
+                <small class="text-muted">Years Voted</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voting History -->
+          <div class="voting-history">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-clock-history me-2"></i>
+              Voting History
+            </h6>
+
+            <div class="accordion" id="votingHistoryAccordion">
+              <div
+                v-for="year in sortedYears"
+                :key="year"
+                class="accordion-item"
+              >
+                <h2 class="accordion-header" :id="`heading${year}`">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    :data-bs-target="`#collapse${year}`"
+                    :aria-expanded="false"
+                    :aria-controls="`collapse${year}`"
+                  >
+                    <strong>{{ year }}</strong>
+                    <span class="badge bg-primary rounded-pill ms-2">
+                      {{ votesByYear[year].length }} vote{{
+                        votesByYear[year].length !== 1 ? "s" : ""
+                      }}
+                    </span>
+                  </button>
+                </h2>
+                <div
+                  :id="`collapse${year}`"
+                  class="accordion-collapse collapse"
+                  :aria-labelledby="`heading${year}`"
+                  data-bs-parent="#votingHistoryAccordion"
+                >
+                  <div class="accordion-body p-0">
+                    <div class="list-group list-group-flush">
+                      <div
+                        v-for="vote in sortedVotesByYear(year)"
+                        :key="`${vote.userId}-${vote.voteYear}`"
+                        class="list-group-item d-flex justify-content-between align-items-center vote-item"
+                      >
+                        <div>
+                          <i class="bi bi-person-fill me-2 text-primary"></i>
+                          <strong>{{ getUserName(vote.userId) }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="sortedYears.length === 0"
+                class="text-muted text-center p-3"
+              >
+                No voting history available
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="modal-footer">
           <button
             type="button"
@@ -100,8 +184,10 @@
 
 <script setup>
 import { ref, defineProps, onMounted, computed } from "vue";
+import { useStore } from "vuex";
 
 const imgError = ref(false);
+const store = useStore();
 
 const props = defineProps(["selectedSong"]);
 
@@ -116,12 +202,65 @@ const showDetails = computed(() => {
 });
 
 function getImage() {
-  const img = props.selectedSong.imageBig;
-  if (img === null) {
+  if (!props.selectedSong?.imageBig) {
     imgError.value = true;
+    return null;
   }
-  return img;
+  return props.selectedSong.imageBig;
 }
+
+function handleImageError() {
+  imgError.value = true;
+}
+
+// Get voting history grouped by year
+const votesByYear = computed(() => {
+  if (!props.selectedSong) return {};
+
+  return store.getters.getSongVotingHistory(
+    props.selectedSong.title,
+    props.selectedSong.artist
+  );
+});
+
+// Get sorted years (most recent first)
+const sortedYears = computed(() => {
+  return Object.keys(votesByYear.value)
+    .map(Number)
+    .sort((a, b) => b - a);
+});
+
+// Sort votes within a year by user name
+const sortedVotesByYear = (year) => {
+  const votes = votesByYear.value[year] || [];
+  return [...votes].sort((a, b) =>
+    getUserName(a.userId).localeCompare(getUserName(b.userId))
+  );
+};
+
+// Get user name by ID
+const getUserName = (userId) => {
+  const user = store.getters.getUserById(userId);
+  return user ? user.fullName : "Unknown User";
+};
+
+// Calculate total votes across all years
+const totalVotes = computed(() => {
+  if (!props.selectedSong) return 0;
+
+  // Calculate from votesByYear
+  let total = 0;
+  Object.values(votesByYear.value).forEach((yearVotes) => {
+    total += yearVotes.length;
+  });
+
+  return total;
+});
+
+// Get unique years
+const uniqueYears = computed(() => {
+  return sortedYears.value;
+});
 
 onMounted(() => {
   const songDetailsModal = document.getElementById("songDetailsModal");

@@ -818,3 +818,116 @@ body[data-theme="dark"] {
   border-color: #2d5f2e;
   color: #a8e6a8;
 }
+
+[data-theme="dark"] .bg-light {
+  background-color: var(--highlight-color) !important;
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .list-group-item:hover {
+  background-color: var(--hover-color);
+}
+
+[data-theme="dark"] .text-primary {
+  color: var(--letter-color) !important;
+}
+
+[data-theme="dark"] .text-success {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+  background-color: var(--letter-color) !important;
+}
+
+.voting-history {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.stats-card {
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vote-item {
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.vote-item:hover {
+  border-left-color: var(--bs-primary);
+}
+
+/* Dark mode support */
+[data-theme="dark"] .stats-card {
+  background-color: var(--highlight-color) !important;
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .list-group-item:hover {
+  background-color: var(--hover-color);
+}
+
+[data-theme="dark"] .text-muted {
+  color: #999 !important;
+}
+
+[data-theme="dark"] .badge {
+  background-color: var(--letter-color) !important;
+}
+
+[data-theme="dark"] .text-primary {
+  color: var(--letter-color) !important;
+}
+
+[data-theme="dark"] .text-success {
+  color: #4ade80 !important;
+}
+
+.accordion-button {
+  font-size: 1rem;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}
+
+[data-theme="dark"] .accordion-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .accordion-button {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+  background-color: var(--highlight-color);
+  color: var(--letter-color);
+}

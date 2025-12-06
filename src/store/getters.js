@@ -141,6 +141,42 @@ const getters = {
     topSongsByYear.sort((a, b) => b.votes - a.votes);
     return topSongsByYear;
   },
+  getTopSongsBySelectedYear: (state) => (year) => {
+    let topSongsByYear = [];
+
+    if (state.songs) {
+      const songsForYear = state.songs.filter(song => song.voteYear === year);
+      songsForYear.forEach((song) => {
+        let addSong = {
+          id: song.id,
+          artist: song.artist,
+          title: song.title,
+          audio: song.audio,
+          image: song.image,
+          votes: 1,
+          userIds: [],
+        };
+        let foundSong = topSongsByYear.find((r) => r.title === song.title && r.artist === song.artist);
+        if (foundSong) {
+          foundSong.votes = ++foundSong.votes;
+          foundSong.userIds.push({
+            id: foundSong.votes,
+            userId: song.userId,
+            voteYear: song.voteYear,
+          });
+        } else {
+          addSong.userIds.push({
+            id: 1,
+            userId: song.userId,
+            voteYear: song.voteYear,
+          });
+          topSongsByYear.push(addSong);
+        }
+      });
+    }
+    topSongsByYear.sort((a, b) => b.votes - a.votes);
+    return topSongsByYear;
+  },
   getYearsFormSongs: (state) => {
     let years = [];
     state.songs.forEach((e) => {
@@ -186,7 +222,28 @@ const getters = {
     })
     return users;
   },
+  getSongVotingHistory: (state) => (title, artist) => {
+    if (!state.songs) return [];
 
+    const songVotes = state.songs.filter(
+      song => song.title === title && song.artist === artist
+    );
+
+    // Group by year
+    const votesByYear = {};
+    songVotes.forEach(vote => {
+      if (!votesByYear[vote.voteYear]) {
+        votesByYear[vote.voteYear] = [];
+      }
+      votesByYear[vote.voteYear].push({
+        userId: vote.userId,
+        voteYear: vote.voteYear,
+        id: vote.id
+      });
+    });
+
+    return votesByYear;
+  },
 
 };
 
