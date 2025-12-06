@@ -168,7 +168,7 @@ body[data-theme="dark"] {
   background-color: var(--letter-color) !important;
 }
 
-.main-badge {
+ {
   color: var(--highlight-color);
   border-radius: 15px;
   padding: 0.5rem;
@@ -546,6 +546,7 @@ body[data-theme="dark"] {
   box-shadow: 0 2px 6px rgba(217, 31, 39, 0.3);
   transition: all 0.3s ease;
   display: inline-block;
+  text-align: center;
 }
 
 .main-badge:hover {
@@ -579,6 +580,44 @@ body[data-theme="dark"] {
 [data-theme="dark"] .btn-group {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   background-color: var(--card-bg);
+}
+
+/* Extra Options Enhancements */
+#extra-options {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#extra-options .btn-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767.98px) {
+  #extra-options {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  #extra-options .btn-group {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #extra-options .btn-group .btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 991.98px) and (min-width: 768px) {
+  #extra-options {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
 }
 
 /* Modal Enhancements */

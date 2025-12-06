@@ -12,7 +12,7 @@
       }}</span>
     </div>
 
-    <div id="extra options" class="col-md-auto mb-1">
+    <div id="extra-options" class="col-md-auto mb-1">
       <div class="btn-group">
         <showModelForAddingYears />
         <addNewUser />
