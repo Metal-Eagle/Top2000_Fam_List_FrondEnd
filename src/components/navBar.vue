@@ -36,7 +36,8 @@
             @click="toggleDarkMode"
             :aria-pressed="isDarkMode"
           >
-            {{ isDarkMode ? "Light Mode" : "Dark Mode" }}
+            <span v-if="isDarkMode">☀️ Light Mode</span>
+            <span v-else>🌙 Dark Mode</span>
           </button>
         </div>
       </div>
