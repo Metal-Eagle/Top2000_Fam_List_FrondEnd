@@ -3,9 +3,7 @@
   <navBar />
   <loading :loading="!getTopSongsByYear" />
   <div class="row" v-if="getMainName">
-    <div class="h1 col text-center">
-      {{ getMainName }}
-    </div>
+    <div class="h1 col text-center">Top Songs of {{ getLastVoteYear }}</div>
   </div>
 
   <div v-if="getMainName" class="table-responsive">
@@ -43,7 +41,7 @@ export default {
     alert,
   },
   computed: {
-    ...mapGetters(["getMainName", "getTopSongsByYear"]),
+    ...mapGetters(["getMainName", "getTopSongsByYear", "getLastVoteYear"]),
   },
 };
 </script>
