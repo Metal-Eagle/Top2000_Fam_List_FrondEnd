@@ -99,6 +99,14 @@
           </button>
           <button
             type="button"
+            class="btn btn-info"
+            @click="openTuneMyMusic"
+            title="Transfer songs to streaming services"
+          >
+            🎵 Transfer to Streaming Service
+          </button>
+          <button
+            type="button"
             class="btn btn-outline-main"
             @click="copyToClipboard"
             :disabled="filteredSongs.length === 0"
@@ -291,6 +299,13 @@ export default {
 
       this.$store.dispatch("show_success_msg", {
         msg: `File "${filename}" downloaded successfully!`,
+      });
+    },
+    openTuneMyMusic() {
+      window.open("https://www.tunemymusic.com/nl/transfer", "_blank");
+
+      this.$store.dispatch("show_success_msg", {
+        msg: "Opening TuneMyMusic in new tab. Copy your song list and paste it there!",
       });
     },
   },
