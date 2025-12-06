@@ -31,14 +31,14 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">Select Voter</label>
-              <select class="form-select" v-model="selectedVotter">
+              <select class="form-select" v-model="selectedVoter">
                 <option :value="null">All voters</option>
                 <option
-                  v-for="votter in getUsersFromSongs"
-                  :key="votter.id"
-                  :value="votter.id"
+                  v-for="voter in getUsersFromSongs"
+                  :key="voter.id"
+                  :value="voter.id"
                 >
-                  {{ votter.fullName }}
+                  {{ voter.fullName }}
                 </option>
               </select>
             </div>
@@ -65,6 +65,7 @@
               <option value="tsv">TSV (Tab Separated)</option>
               <option value="markdown">Markdown Table</option>
               <option value="plain">Plain Text</option>
+              <option value="simple">Simple List (Artist - Title)</option>
             </select>
           </div>
 
@@ -128,9 +129,9 @@ export default {
   name: "exportData",
   data() {
     return {
-      selectedVotter: null,
+      selectedVoter: null,
       selectedYear: null,
-      exportFormat: "csv",
+      exportFormat: "simple",
       copySuccess: false,
       copying: false,
     };
@@ -146,8 +147,8 @@ export default {
     filteredSongs() {
       let songs = this.getAllSongs;
 
-      if (this.selectedVotter !== null) {
-        songs = songs.filter((song) => song.userId === this.selectedVotter);
+      if (this.selectedVoter !== null) {
+        songs = songs.filter((song) => song.userId === this.selectedVoter);
       }
 
       if (this.selectedYear !== null) {
@@ -181,6 +182,8 @@ export default {
           return this.generateMarkdown(data);
         case "plain":
           return this.generatePlainText(data);
+        case "simple":
+          return this.generateSimpleList(data);
         default:
           return this.generateCSV(data);
       }
@@ -227,6 +230,9 @@ export default {
       });
       return output;
     },
+    generateSimpleList(songs) {
+      return songs.map((song) => `${song.artist} - ${song.title}`).join("\n");
+    },
     escapeCSV(text) {
       if (text.includes(",") || text.includes('"') || text.includes("\n")) {
         return `"${text.replace(/"/g, '""')}"`;
@@ -264,7 +270,11 @@ export default {
     downloadFile() {
       const exportData = this.generateExportData();
       const extension =
-        this.exportFormat === "markdown" ? "md" : this.exportFormat;
+        this.exportFormat === "markdown"
+          ? "md"
+          : this.exportFormat === "simple"
+          ? "txt"
+          : this.exportFormat;
       const filename = `${this.getMainName}_songs_${
         new Date().toISOString().split("T")[0]
       }.${extension}`;

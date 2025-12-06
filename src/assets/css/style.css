@@ -806,3 +806,15 @@ body[data-theme="dark"] {
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
   background: #ff6b7a;
 }
+
+[data-theme="dark"] .alert-info {
+  background-color: var(--highlight-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .alert-success {
+  background-color: #1e4620;
+  border-color: #2d5f2e;
+  color: #a8e6a8;
+}
