@@ -31,20 +31,15 @@
           </li>
         </ul>
       </div>
-      <spotifyItems />
     </div>
   </nav>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import spotifyItems from "@/components/spotifyItems";
-
 export default {
   name: "NavBar",
-  components: {
-    spotifyItems,
-  },
+  components: {},
   computed: {
     ...mapGetters(["getMainId"]),
   },
@@ -57,5 +52,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
