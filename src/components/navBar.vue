@@ -30,6 +30,15 @@
             >
           </li>
         </ul>
+        <div class="d-flex align-items-center ms-auto">
+          <button
+            class="btn btn-outline-main"
+            @click="toggleDarkMode"
+            :aria-pressed="isDarkMode"
+          >
+            {{ isDarkMode ? "Light Mode" : "Dark Mode" }}
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -42,12 +51,34 @@ export default {
   components: {},
   computed: {
     ...mapGetters(["getMainId"]),
+    isDarkMode() {
+      return document.body.getAttribute("data-theme") === "dark";
+    },
   },
   methods: {
     navUrl(path) {
       let newPath = path.replace(":id", this.getMainId);
       return newPath;
     },
+    toggleDarkMode() {
+      const isDark = document.body.getAttribute("data-theme") === "dark";
+      if (isDark) {
+        document.body.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "light");
+      } else {
+        document.body.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+      }
+    },
+  },
+  mounted() {
+    // Set theme on load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.setAttribute("data-theme", savedTheme);
+    } else {
+      document.body.setAttribute("data-theme", "light");
+    }
   },
 };
 </script>
