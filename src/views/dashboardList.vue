@@ -28,15 +28,6 @@
         class="form-control"
         placeholder="Search for number"
       />
-      <select class="form-select" v-model="selectedUser">
-        <option
-          v-for="option in getUsersFromSongs"
-          :key="option.id"
-          :value="option.id"
-        >
-          {{ option.fullName }}
-        </option>
-      </select>
 
       <select class="form-select" v-model="selectedOption">
         <option
@@ -48,7 +39,20 @@
           {{ option.name }}
         </option>
       </select>
+
+      <select class="form-select" v-model="selectedUser">
+        <option :value="null">All users</option>
+        <option
+          v-for="option in getUsersFromSongs"
+          :key="option.id"
+          :value="option.id"
+        >
+          {{ option.fullName }}
+        </option>
+      </select>
+
       <select class="form-select" v-model="selectedYear">
+        <option :value="null">All years</option>
         <option
           v-for="option in getAllVoteYears"
           :key="option.year"
@@ -136,9 +140,12 @@ export default {
             );
             break;
         }
-        let filteredSongs = data.filter((r) =>
-          `${r.voteYear}`.includes(this.selectedYear)
-        );
+        let filteredSongs = data;
+        if (this.selectedYear !== null) {
+          filteredSongs = filteredSongs.filter((r) =>
+            `${r.voteYear}`.includes(this.selectedYear)
+          );
+        }
         if (this.selectedUser !== null) {
           filteredSongs = filteredSongs.filter(
             (song) => song.userId === this.selectedUser
@@ -146,9 +153,12 @@ export default {
         }
         return filteredSongs;
       } else {
-        let allSongs = this.getAllSongs.filter((r) =>
-          `${r.voteYear}`.includes(this.selectedYear)
-        );
+        let allSongs = this.getAllSongs;
+        if (this.selectedYear !== null) {
+          allSongs = allSongs.filter((r) =>
+            `${r.voteYear}`.includes(this.selectedYear)
+          );
+        }
         if (this.selectedUser !== null) {
           allSongs = allSongs.filter((s) => s.userId === this.selectedUser);
         }
@@ -163,7 +173,7 @@ export default {
   },
   mounted() {
     // set year
-    this.selectedYear = this.getLastVoteYear;
+    this.selectedYear = this.getLastVoteYear; // Default to latest vote year
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -199,7 +209,7 @@ export default {
           selected: false,
         },
       ],
-      selectedYear: null,
+      selectedYear: null, // keep as null, will be set in mounted()
       selectedOption: "title",
       searchNumberInput: null,
       selectedItem: null,
