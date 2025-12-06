@@ -308,31 +308,81 @@ body[data-theme="dark"] {
   box-shadow: 0 4px 12px rgba(217, 31, 39, 0.3);
 }
 
+/* Mobile Navbar Enhancements */
+.navbar-toggler {
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(217, 31, 39, 0.25);
+}
+
+.navbar-collapse {
+  transition: all 0.3s ease-in-out;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background-color: var(--highlight-color);
+    border-radius: 12px;
+    margin-top: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-nav {
+    gap: 0.25rem;
+  }
+
+  .navbar .nav-link {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0;
+  }
+
+  .navbar .nav-link:hover {
+    transform: translateX(4px);
+  }
+
+  .navbar .btn-outline-main {
+    width: 100%;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .navbar .btn-outline-main:hover {
+    transform: scale(1.02);
+  }
+}
+
 [data-theme="dark"] .navbar {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
+[data-theme="dark"] .navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 71, 87, 0.25);
+}
+
+[data-theme="dark"] .navbar-toggler:hover {
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 991.98px) {
+  [data-theme="dark"] .navbar-collapse {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
 [data-theme="dark"] .navbar .nav-link:hover {
   background-color: var(--hover-color);
-}
-
-[data-theme="dark"] .navbar .nav-link.router-link-active {
-  background-color: var(--letter-color);
-  color: #fff !important;
-}
-
-[data-theme="dark"] .navbar .btn-outline-main:hover {
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
-}
-
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.navbar-brand:hover {
-  transform: scale(1.05);
 }
 
 /* Table Enhancements */
@@ -408,6 +458,84 @@ body[data-theme="dark"] {
 
 [data-theme="dark"] .input-group {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Search Bar Enhancements */
+#search-bar .input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--highlight-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#search-bar .input-group .form-control {
+  flex: 1 1 300px;
+  min-width: 200px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#search-bar .input-group .form-control:focus {
+  border-color: var(--letter-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#search-bar .input-group .form-select {
+  flex: 0 1 auto;
+  min-width: 150px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+#search-bar .input-group .form-select:hover {
+  border-color: var(--letter-color);
+  transform: translateY(-2px);
+}
+
+#search-bar .input-group .form-select:focus {
+  border-color: var(--letter-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 767.98px) {
+  #search-bar .input-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  #search-bar .input-group .form-control,
+  #search-bar .input-group .form-select {
+    width: 100%;
+    flex: 1 1 100%;
+    min-width: 100%;
+    max-width: 100% !important;
+  }
+}
+
+[data-theme="dark"] #search-bar .input-group {
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] #search-bar .input-group .form-control,
+[data-theme="dark"] #search-bar .input-group .form-select {
+  background-color: var(--highlight-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] #search-bar .input-group .form-control:focus,
+[data-theme="dark"] #search-bar .input-group .form-select:focus {
+  box-shadow: 0 4px 8px rgba(255, 71, 87, 0.2);
 }
 
 /* Badge Enhancements */
