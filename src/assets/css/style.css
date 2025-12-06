@@ -105,7 +105,7 @@ body[data-theme="dark"] {
   background-color: var(--highlight-color);
   border-color: var(--letter-color);
   color: var(--text-color);
-  box-shadow: 0 0 0 0.25rem rgba(255, 71, 87, 0.25);
+  box-shadow: none;
 }
 
 [data-theme="dark"] .form-label {
@@ -398,6 +398,7 @@ body[data-theme="dark"] {
 .input-group .form-control:focus,
 .input-group .form-select:focus {
   z-index: 3;
+  box-shadow: none;
 }
 
 .input-group .form-control::placeholder {
