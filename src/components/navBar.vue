@@ -77,7 +77,12 @@ export default {
     if (savedTheme) {
       document.body.setAttribute("data-theme", savedTheme);
     } else {
-      document.body.setAttribute("data-theme", "light");
+      // Use browser's preferred color scheme
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      const theme = prefersDark ? "dark" : "light";
+      document.body.setAttribute("data-theme", theme);
     }
   },
 };
