@@ -29,7 +29,11 @@
         placeholder="Search for number"
       />
 
-      <select class="form-select" v-model="selectedOption">
+      <select
+        class="form-select"
+        style="max-width: 150px"
+        v-model="selectedOption"
+      >
         <option
           v-for="option in selectorOptions"
           :key="option.name"
@@ -40,7 +44,11 @@
         </option>
       </select>
 
-      <select class="form-select" v-model="selectedUser">
+      <select
+        class="form-select"
+        style="max-width: 200px"
+        v-model="selectedUser"
+      >
         <option :value="null">All users</option>
         <option
           v-for="option in getUsersFromSongs"
@@ -51,7 +59,11 @@
         </option>
       </select>
 
-      <select class="form-select" v-model="selectedYear">
+      <select
+        class="form-select"
+        style="max-width: 150px"
+        v-model="selectedYear"
+      >
         <option :value="null">All years</option>
         <option
           v-for="option in getAllVoteYears"
