@@ -16,6 +16,7 @@
       <div class="btn-group">
         <showModelForAddingYears />
         <addNewUser />
+        <exportData />
       </div>
     </div>
   </div>
@@ -114,6 +115,7 @@ import navBar from "@/components/navBar";
 import alert from "@/components/alert";
 import showModelForAddingYears from "@/components/showModelForAddingYears.vue";
 import addNewUser from "@/components/addNewUser.vue";
+import exportData from "@/components/exportData.vue";
 import songDetails from "@/components/songDetails.vue";
 
 export default {
@@ -124,6 +126,7 @@ export default {
     alert,
     showModelForAddingYears,
     addNewUser,
+    exportData,
     songDetails,
   },
   computed: {

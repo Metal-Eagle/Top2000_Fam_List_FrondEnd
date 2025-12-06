@@ -10,9 +10,6 @@ import dashboardTopSongsThisYear from "@/views/dashboardTopSongsThisYear.vue";
 import addFamily from "@/views/addFamily.vue";
 import PageNotFound from '@/views/PageNotFound.vue'
 
-
-import spotifyCallback from '@/views/spotifyCallback.vue'
-
 import {
     getSongByIdAndSetInStore
 } from "@/service/getData"
@@ -67,15 +64,6 @@ const routes = [{
     }
 },
 {
-    path: "/spotifycallback",
-    name: "Spotify",
-    showInNav: false,
-    component: spotifyCallback,
-    meta: {
-        title: `Spotify - ${process.env.VUE_APP_TITLE}`,
-        description: "Spotify callback",
-    }
-}, {
     path: "/:pathMatch(.*)*",
     name: "404 not found",
     showInNav: false,
