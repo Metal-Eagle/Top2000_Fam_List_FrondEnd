@@ -1,8 +1,4 @@
-TODO:
-
-- [ ] Make songs clickable for more info
-
-## Docker command
+# Docker command
 
 ```
 docker-compose up --build -d
@@ -35,8 +31,3 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-### TODO:
-
-[] Extension of the list that there is more than 1 option to select when creating a spotify list
-[] Top list check if not 1 voter

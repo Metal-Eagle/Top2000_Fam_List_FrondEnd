@@ -46,9 +46,9 @@
     <div class="col-md-12">
       <p class="h2 text-center">Explanation</p>
       <p>
-        This app allows you to add multiple music voting lists of the Top2000 in
-        one list. You can then see the top results, add the whole list to
-        Spotify and share this complete voting list with friends or family.
+        This app allows you to combine multiple Top 2000 voting lists into a
+        single overview. You can view the results, export the combined playlist
+        to your preferred music app, and share it with friends and family.
       </p>
     </div>
   </div>

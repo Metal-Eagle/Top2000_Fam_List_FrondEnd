@@ -168,13 +168,6 @@ body[data-theme="dark"] {
   background-color: var(--letter-color) !important;
 }
 
- {
-  color: var(--highlight-color);
-  border-radius: 15px;
-  padding: 0.5rem;
-  font-size: 0.8em;
-}
-
 .stepper {
   background-color: var(--highlight-color);
   border-radius: 10px;
@@ -224,20 +217,6 @@ body[data-theme="dark"] {
   to {
     opacity: 0;
   }
-}
-
-.btn-spotify {
-  font-family: Circular, Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 500px;
-  padding: 11px 32px 9px;
-  color: #fff;
-  background-color: #1db954;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  white-space: normal;
-  border-color: #1aa34a;
 }
 
 .songClick {

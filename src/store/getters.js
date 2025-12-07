@@ -1,6 +1,3 @@
-import {
-  doSpotifyLogin
-} from "@/service/spotifyService";
 
 const getters = {
   getUserById: (state) => (id) => {
@@ -23,8 +20,6 @@ const getters = {
     }
     return setOfYears
   },
-
-
   getAllVoteYears: (state, getters) => {
     const setOfYears = getters.getSetOfYears
 
@@ -192,20 +187,6 @@ const getters = {
       if (index === -1) voters.push(e.userId);
     });
     return voters;
-  },
-  getSpotifyAccessToken: (state) => {
-    //Check if valid token
-    if (
-      state.spotifyAccessToken.expiresAt <= +new Date() &&
-      state.spotifyAccessToken.access_token !== null
-    ) {
-      //if not login again
-      doSpotifyLogin();
-    }
-    return state.spotifyAccessToken.access_token;
-  },
-  getSpotifyUser: (state) => {
-    return state.spotifyUser;
   },
   getError: (state) => {
     return state.error;

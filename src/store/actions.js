@@ -19,19 +19,6 @@ const actions = {
   }, song) {
     commit("CHANGE_PLAYING_SONG", song);
   },
-  add_spotify_access_token({
-    commit
-  }, token) {
-    //Token expiry  in 1 hour
-    let expires_in_ms = token.expires_in * 1000;
-    token.expiresAt = +new Date().getTime() + expires_in_ms;
-    commit("ADDSPOTIFYACCESSTOKEN", token);
-  },
-  add_spotify_user({
-    commit
-  }, users) {
-    commit("ADDSPOTIFYUSER", users);
-  },
   show_error_msg({
     commit
   }, error) {
