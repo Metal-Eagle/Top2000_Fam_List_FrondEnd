@@ -636,40 +636,31 @@ const artistStats = computed(() => {
 
   if (artistSongs.length === 0) return null;
 
-  // Collect all votes for this artist
+  // Use a Set to track unique songs (title only, since same artist)
+  const uniqueSongTitles = new Set();
+  artistSongs.forEach((song) => uniqueSongTitles.add(song.title));
+
+  // Collect all votes for this artist - count each song entry as one vote
   const voterStats = {};
-  let totalVotes = 0;
-  const songVoteCounts = [];
+  const songVoteCounts = {};
 
   artistSongs.forEach((song) => {
-    const votingHistory = store.getters.getSongVotingHistory(
-      song.title,
-      song.artist
-    );
-    let songTotalVotes = 0;
+    const songKey = song.title;
 
-    Object.values(votingHistory).forEach((yearVotes) => {
-      yearVotes.forEach((vote) => {
-        // Track votes per user
-        if (!voterStats[vote.userId]) {
-          voterStats[vote.userId] = {
-            count: 0,
-            songs: new Set(),
-          };
-        }
-        voterStats[vote.userId].count++;
-        voterStats[vote.userId].songs.add(song.title);
-        songTotalVotes++;
-        totalVotes++;
-      });
-    });
-
-    if (songTotalVotes > 0) {
-      songVoteCounts.push({
-        title: song.title,
-        voteCount: songTotalVotes,
-      });
+    if (!songVoteCounts[songKey]) {
+      songVoteCounts[songKey] = 0;
     }
+    songVoteCounts[songKey]++;
+
+    // Track votes per user per song
+    if (!voterStats[song.userId]) {
+      voterStats[song.userId] = {
+        count: 0,
+        songs: new Set(),
+      };
+    }
+    voterStats[song.userId].count++;
+    voterStats[song.userId].songs.add(song.title);
   });
 
   // Find top voter
@@ -692,18 +683,15 @@ const artistStats = computed(() => {
     };
   }
 
-  // Sort songs by vote count and get the top 5, remove the same title songs
-  const topSongs = songVoteCounts
+  // Convert songVoteCounts to array and sort
+  const topSongs = Object.entries(songVoteCounts)
+    .map(([title, voteCount]) => ({ title, voteCount }))
     .sort((a, b) => b.voteCount - a.voteCount)
-    .filter(
-      (song, index, self) =>
-        index === self.findIndex((s) => s.title === song.title)
-    )
     .slice(0, 5);
 
   return {
-    totalSongs: artistSongs.length,
-    totalVotes: totalVotes,
+    totalSongs: uniqueSongTitles.size,
+    totalVotes: artistSongs.length,
     uniqueVoters: Object.keys(voterStats).length,
     topVoter: topVoter,
     topSongs: topSongs,
