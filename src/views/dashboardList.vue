@@ -76,58 +76,28 @@
       </select>
     </div>
   </div>
-
-  <div class="table-wrapper" v-if="getSongs">
-    <div class="table-responsive">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Artist</th>
-            <th scope="col">Title</th>
-            <th scope="col">Voter</th>
-            <th scope="col">Year</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="item in getSongs"
-            :key="item.id"
-            class="songClick"
-            @click="openExtraDetails(item)"
-            data-bs-toggle="modal"
-            data-bs-target="#songDetailsModal"
-          >
-            <Song :item="item" />
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- Add modal for details -->
-  <songDetails :selectedSong="selectedItem" />
+  <songsTable :songs="getSongs"> </songsTable>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Song from "@/components/song";
+import songsTable from "@/components/songsTable";
 import loading from "@/components/loading";
 import navBar from "@/components/navBar";
 import alert from "@/components/alert";
 import showModelForAddingYears from "@/components/showModelForAddingYears.vue";
 import addNewUser from "@/components/addNewUser.vue";
 import exportData from "@/components/exportData.vue";
-import songDetails from "@/components/songDetails.vue";
 
 export default {
   components: {
-    Song,
     loading,
     navBar,
     alert,
     showModelForAddingYears,
     addNewUser,
     exportData,
-    songDetails,
+    songsTable,
   },
   computed: {
     ...mapGetters([

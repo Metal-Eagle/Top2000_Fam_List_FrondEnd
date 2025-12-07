@@ -8,42 +8,36 @@
     </div>
   </div>
 
-  <div v-if="getMainName" class="table-responsive">
-    <table class="table table-striped table-hover" v-if="getTopSongs">
-      <thead>
-        <tr>
-          <th scope="col">Artist</th>
-          <th scope="col">Title</th>
-          <th scope="col">Voters</th>
-          <th scope="col">Total votes</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in getTopSongs" :key="item.id">
-          <Song v-if="item.votes > 2" :item="item" />
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <songsTable :songs="getTopSongs" :columns="customColumns"></songsTable>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Song from "@/components/song";
+import songsTable from "@/components/songsTable";
 import loading from "@/components/loading";
 import navBar from "@/components/navBar";
 import alert from "@/components/alert";
 
 export default {
   components: {
-    Song,
     loading,
     navBar,
     alert,
+    songsTable,
   },
   computed: {
     ...mapGetters(["getMainName", "getTopSongs"]),
+  },
+  data() {
+    return {
+      customColumns: [
+        { key: "artist", label: "Artist" },
+        { key: "title", label: "Title" },
+        { key: "voters", label: "Voters" },
+        { key: "", label: "" },
+        { key: "Total", label: "Total" },
+      ],
+    };
   },
 };
 </script>
