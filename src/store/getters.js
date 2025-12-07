@@ -1,4 +1,3 @@
-
 const getters = {
   getUserById: (state) => (id) => {
     return state.users.find((users) => users.id === id);
@@ -225,7 +224,58 @@ const getters = {
 
     return votesByYear;
   },
+  getTopSongsByYearWithTieBreaker: (state, getters) => {
+    const currentYear = getters.getLastVoteYear;
+    const lastYear = currentYear - 1;
+    let topSongsByYear = [];
 
+    if (state.songs) {
+      const songsForYear = state.songs.filter(song => song.voteYear === currentYear);
+      songsForYear.forEach((song) => {
+        let foundSong = topSongsByYear.find((r) => r.title === song.title && r.artist === song.artist);
+        if (foundSong) {
+          foundSong.votes = ++foundSong.votes;
+          foundSong.userIds.push({
+            id: foundSong.votes,
+            userId: song.userId,
+            voteYear: song.voteYear,
+          });
+        } else {
+          topSongsByYear.push({
+            id: song.id,
+            artist: song.artist,
+            title: song.title,
+            audio: song.audio,
+            image: song.image,
+            votes: 1,
+            userIds: [{
+              id: 1,
+              userId: song.userId,
+              voteYear: song.voteYear,
+            }],
+          });
+        }
+      });
+    }
+
+    // Calculate last year's votes for tiebreaker
+    topSongsByYear.forEach(song => {
+      const lastYearVotes = state.songs.filter(
+        s => s.title === song.title && s.artist === song.artist && s.voteYear === lastYear
+      ).length;
+      song.lastYearVotes = lastYearVotes;
+    });
+
+    // Sort by this year's votes (descending), then by last year's votes (descending)
+    topSongsByYear.sort((a, b) => {
+      if (b.votes !== a.votes) {
+        return b.votes - a.votes;
+      }
+      return b.lastYearVotes - a.lastYearVotes;
+    });
+
+    return topSongsByYear.slice(0, 10);
+  },
 };
 
 export default getters;

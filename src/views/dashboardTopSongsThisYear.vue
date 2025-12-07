@@ -1,13 +1,16 @@
 <template>
   <alert />
   <navBar />
-  <loading :loading="!getTopSongsByYear" />
+  <loading :loading="!getTopSongsByYearWithTieBreaker" />
   <div class="row" v-if="getMainName">
-    <div class="h1 col text-center">Top Songs of {{ getLastVoteYear }}</div>
+    <div class="h1 col text-center">Top 10 Songs of {{ getLastVoteYear }}</div>
   </div>
 
   <div v-if="getMainName" class="table-responsive">
-    <table class="table table-striped table-hover" v-if="getTopSongsByYear">
+    <table
+      class="table table-striped table-hover"
+      v-if="getTopSongsByYearWithTieBreaker"
+    >
       <thead>
         <tr>
           <th scope="col">Artist</th>
@@ -18,8 +21,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in getTopSongsByYear" :key="item.id">
-          <Song v-if="item.votes > 1" :item="item" />
+        <tr v-for="item in getTopSongsByYearWithTieBreaker" :key="item.id">
+          <Song :item="item" />
         </tr>
       </tbody>
     </table>
@@ -41,7 +44,11 @@ export default {
     alert,
   },
   computed: {
-    ...mapGetters(["getMainName", "getTopSongsByYear", "getLastVoteYear"]),
+    ...mapGetters([
+      "getMainName",
+      "getTopSongsByYearWithTieBreaker",
+      "getLastVoteYear",
+    ]),
   },
 };
 </script>
