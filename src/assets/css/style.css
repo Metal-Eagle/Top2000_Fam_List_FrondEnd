@@ -915,3 +915,167 @@ body[data-theme="dark"] {
   min-height: 41.5rem;
   overflow-y: auto;
 }
+
+/* Mobile View Enhancements for Statistics Page */
+@media (max-width: 767.98px) {
+  /* Stats Cards */
+  .stats-card {
+    margin-bottom: 1rem;
+    padding: 1.5rem 1rem !important;
+  }
+
+  .row.text-center.mb-4 .col-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .row.mb-4 .col-6,
+  .row.mb-4 .col-4,
+  .row.mb-4 .col-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  /* List Groups */
+  .list-group-item {
+    padding: 1rem 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-group-item div {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .list-group-item strong {
+    display: block;
+    word-break: break-word;
+    font-size: 0.95rem;
+  }
+
+  .list-group-item span.badge {
+    width: 100%;
+    text-align: center;
+    justify-self: stretch;
+  }
+
+  /* Charts */
+  .row.mb-4 .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-card canvas {
+    max-width: 100%;
+  }
+
+  /* Headings */
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h4 {
+    font-size: 1rem !important;
+    word-break: break-word;
+  }
+
+  h5 {
+    font-size: 0.95rem !important;
+  }
+
+  /* Small text */
+  small {
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  /* Text spacing */
+  .text-muted {
+    font-size: 0.8rem;
+  }
+
+  /* Icons */
+  .bi {
+    font-size: 1rem;
+  }
+
+  /* Chart container adjustments */
+  .chart-container-small {
+    min-height: auto;
+  }
+
+  .chart-container-scroll {
+    min-height: 300px;
+    overflow-y: auto;
+  }
+
+  /* Container padding */
+  .container.mt-4 {
+    padding: 0.75rem;
+  }
+
+  /* Badge sizing */
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Extra small devices */
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  h4 {
+    font-size: 0.95rem !important;
+  }
+
+  h5 {
+    font-size: 0.9rem !important;
+  }
+
+  .stats-card {
+    padding: 1rem !important;
+  }
+
+  .container.mt-4 {
+    padding: 0.5rem;
+  }
+
+  .list-group-item {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .p-3.bg-light.rounded {
+    padding: 1rem !important;
+  }
+
+  /* Better touch targets */
+  .list-group-item {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+  }
+
+  .badge {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Dark mode mobile adjustments */
+[data-theme="dark"] .stats-card {
+  background-color: var(--highlight-color) !important;
+}
+
+[data-theme="dark"] .p-3.bg-light.rounded {
+  background-color: var(--highlight-color) !important;
+}

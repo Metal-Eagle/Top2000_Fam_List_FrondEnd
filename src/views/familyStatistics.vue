@@ -504,6 +504,7 @@ export default {
     renderCharts() {
       const songs = this.getAllSongs || [];
       const users = this.getUsersFromSongs || [];
+      const isMobile = window.innerWidth < 768;
 
       if (!songs.length) return;
 
@@ -566,7 +567,17 @@ export default {
         this.charts.topSongs = new Chart(ctxSongs, {
           type: "bar",
           data: {
-            labels: top5Songs.map((s) => `${s.title} - ${s.artist}`),
+            labels: top5Songs.map((s) => {
+              const title =
+                s.title.length > 20
+                  ? s.title.substring(0, 17) + "..."
+                  : s.title;
+              const artist =
+                s.artist.length > 15
+                  ? s.artist.substring(0, 12) + "..."
+                  : s.artist;
+              return isMobile ? `${title}\n${artist}` : `${title} - ${artist}`;
+            }),
             datasets: [
               {
                 label: "Votes",
@@ -581,7 +592,10 @@ export default {
             responsive: true,
             maintainAspectRatio: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } },
+            scales: {
+              y: { beginAtZero: true },
+              x: { ticks: { font: { size: isMobile ? 10 : 12 } } },
+            },
           },
         });
       }
@@ -592,7 +606,9 @@ export default {
         this.charts.topArtists = new Chart(ctxArtists, {
           type: "bar",
           data: {
-            labels: top5Artists.map((a) => a[0]),
+            labels: top5Artists.map((a) =>
+              a[0].length > 20 ? a[0].substring(0, 17) + "..." : a[0]
+            ),
             datasets: [
               {
                 label: "Votes",
@@ -607,7 +623,10 @@ export default {
             responsive: true,
             maintainAspectRatio: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } },
+            scales: {
+              y: { beginAtZero: true },
+              x: { ticks: { font: { size: isMobile ? 10 : 12 } } },
+            },
           },
         });
       }
@@ -618,7 +637,9 @@ export default {
         this.charts.votesPerUser = new Chart(ctxUsers, {
           type: "doughnut",
           data: {
-            labels: userLabels,
+            labels: userLabels.map((label) =>
+              label.length > 15 ? label.substring(0, 12) + "..." : label
+            ),
             datasets: [
               {
                 label: "Votes",
@@ -638,7 +659,12 @@ export default {
           options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: { legend: { position: "bottom" } },
+            plugins: {
+              legend: {
+                position: isMobile ? "bottom" : "bottom",
+                labels: { font: { size: isMobile ? 10 : 12 } },
+              },
+            },
           },
         });
       }
@@ -653,7 +679,7 @@ export default {
             count: artistSongCounts[index],
           }))
           .sort((a, b) => b.count - a.count)
-          .slice(0, 20); // Show top 20 artists
+          .slice(0, isMobile ? 10 : 20);
 
         // Use the same color palette as votesPerUserChart
         const colorPalette = [
@@ -676,7 +702,11 @@ export default {
         this.charts.songsPerArtist = new Chart(ctxSongsPerArtist, {
           type: "bar",
           data: {
-            labels: sortedArtistData.map((d) => d.artist),
+            labels: sortedArtistData.map((d) =>
+              d.artist.length > 20
+                ? d.artist.substring(0, 17) + "..."
+                : d.artist
+            ),
             datasets: [
               {
                 label: "Unique Songs",
@@ -705,28 +735,26 @@ export default {
                 },
               },
               title: {
-                display: true,
-                text: "Top 20 Artists by Unique Songs",
-                font: { size: 18 },
+                display: !isMobile,
+                text: `Top ${isMobile ? 10 : 20} Artists by Unique Songs`,
+                font: { size: 16 },
               },
             },
             scales: {
               x: {
                 beginAtZero: true,
                 title: {
-                  display: true,
+                  display: !isMobile,
                   text: "Number of Unique Songs",
-                  font: { size: 14 },
+                  font: { size: 12 },
                 },
-                ticks: { font: { size: 12 } },
+                ticks: { font: { size: isMobile ? 9 : 12 } },
               },
               y: {
                 title: {
-                  display: true,
-                  text: "Artist",
-                  font: { size: 14 },
+                  display: false,
                 },
-                ticks: { font: { size: 12 } },
+                ticks: { font: { size: isMobile ? 9 : 12 } },
               },
             },
           },
