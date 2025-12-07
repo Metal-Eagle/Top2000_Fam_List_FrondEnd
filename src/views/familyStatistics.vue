@@ -274,7 +274,8 @@ export default {
       const userArtistStats = {};
 
       songs.forEach((song) => {
-        artistsSet.add(song.artist);
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        artistsSet.add(normalizedArtist);
         // Count votes per user
         if (!userStats[song.userId]) {
           userStats[song.userId] = { count: 0, songs: new Set() };
@@ -283,29 +284,33 @@ export default {
         userStats[song.userId].songs.add(song.title);
 
         // Count votes per song
-        const key = `${song.title}|${song.artist}`;
+        const key = `${song.title}|${normalizedArtist}`;
         if (!songStats[key]) {
-          songStats[key] = { title: song.title, artist: song.artist, votes: 0 };
+          songStats[key] = {
+            title: song.title,
+            artist: normalizedArtist,
+            votes: 0,
+          };
         }
         songStats[key].votes++;
 
         // Count votes per artist
-        if (!artistVoteStats[song.artist]) {
-          artistVoteStats[song.artist] = 0;
+        if (!artistVoteStats[normalizedArtist]) {
+          artistVoteStats[normalizedArtist] = 0;
         }
-        artistVoteStats[song.artist]++;
+        artistVoteStats[normalizedArtist]++;
 
         // Count songs per artist
-        if (!artistSongStats[song.artist]) {
-          artistSongStats[song.artist] = new Set();
+        if (!artistSongStats[normalizedArtist]) {
+          artistSongStats[normalizedArtist] = new Set();
         }
-        artistSongStats[song.artist].add(song.title);
+        artistSongStats[normalizedArtist].add(song.title);
 
         // Track unique artists per user
         if (!userArtistStats[song.userId]) {
           userArtistStats[song.userId] = new Set();
         }
-        userArtistStats[song.userId].add(song.artist);
+        userArtistStats[song.userId].add(normalizedArtist);
       });
 
       // Most voted song
@@ -374,7 +379,8 @@ export default {
       // Calculate evergreen songs (voted every year)
       const songsByYear = {};
       songs.forEach((song) => {
-        const key = `${song.title}|${song.artist}`;
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        const key = `${song.title}|${normalizedArtist}`;
         if (!songsByYear[key]) {
           songsByYear[key] = new Set();
         }
@@ -389,10 +395,11 @@ export default {
       // Calculate evergreen artists (appeared every year)
       const artistsByYear = {};
       songs.forEach((song) => {
-        if (!artistsByYear[song.artist]) {
-          artistsByYear[song.artist] = new Set();
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        if (!artistsByYear[normalizedArtist]) {
+          artistsByYear[normalizedArtist] = new Set();
         }
-        artistsByYear[song.artist].add(song.voteYear);
+        artistsByYear[normalizedArtist].add(song.voteYear);
       });
       const evergreenArtists = Object.values(artistsByYear).filter(
         (years) => years.size === totalYears
@@ -438,11 +445,12 @@ export default {
       // Calculate common favourites (songs voted by multiple users in same year)
       const songVoterCounts = {};
       songs.forEach((song) => {
-        const key = `${song.title}|${song.artist}`;
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        const key = `${song.title}|${normalizedArtist}`;
         if (!songVoterCounts[key]) {
           songVoterCounts[key] = {
             title: song.title,
-            artist: song.artist,
+            artist: normalizedArtist,
             voters: new Set(),
           };
         }
@@ -489,6 +497,10 @@ export default {
     });
   },
   methods: {
+    normalizeArtistName(artist) {
+      if (!artist) return artist;
+      return artist.toLowerCase().replace(/&/g, "en");
+    },
     renderCharts() {
       const songs = this.getAllSongs || [];
       const users = this.getUsersFromSongs || [];
@@ -498,11 +510,12 @@ export default {
       // Get top 5 songs by votes
       const songVoteMap = {};
       songs.forEach((song) => {
-        const key = `${song.title}|${song.artist}`;
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        const key = `${song.title}|${normalizedArtist}`;
         if (!songVoteMap[key]) {
           songVoteMap[key] = {
             title: song.title,
-            artist: song.artist,
+            artist: normalizedArtist,
             votes: 0,
           };
         }
@@ -515,8 +528,10 @@ export default {
       // Top 5 artists by votes
       const artistVoteMap = {};
       songs.forEach((song) => {
-        if (!artistVoteMap[song.artist]) artistVoteMap[song.artist] = 0;
-        artistVoteMap[song.artist]++;
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        if (!artistVoteMap[normalizedArtist])
+          artistVoteMap[normalizedArtist] = 0;
+        artistVoteMap[normalizedArtist]++;
       });
       const top5Artists = Object.entries(artistVoteMap)
         .sort((a, b) => b[1] - a[1])
@@ -534,10 +549,11 @@ export default {
       // Songs per artist (unique songs count)
       const artistSongMap = {};
       songs.forEach((song) => {
-        if (!artistSongMap[song.artist]) {
-          artistSongMap[song.artist] = new Set();
+        const normalizedArtist = this.normalizeArtistName(song.artist);
+        if (!artistSongMap[normalizedArtist]) {
+          artistSongMap[normalizedArtist] = new Set();
         }
-        artistSongMap[song.artist].add(song.title);
+        artistSongMap[normalizedArtist].add(song.title);
       });
       const artistLabels = Object.keys(artistSongMap);
       const artistSongCounts = artistLabels.map(
