@@ -9,7 +9,7 @@
             id="songDetailsModalLabel"
             v-if="props.selectedSong"
           >
-            Details of {{ props.selectedSong.title }} -
+            Details: {{ props.selectedSong.title }} by
             {{ props.selectedSong.artist }}
           </h5>
           <button
@@ -88,18 +88,97 @@
 
           <!-- Statistics Summary -->
           <div class="row text-center mb-4">
+            <div class="col-4">
+              <div class="p-3 bg-light rounded stats-card">
+                <h2 class="mb-0 text-primary">{{ totalVotes }}</h2>
+                <small class="text-muted">Total Votes</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light rounded stats-card">
+                <h2 class="mb-0 text-success">{{ uniqueYears.length }}</h2>
+                <small class="text-muted">Years Voted</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light rounded stats-card">
+                <h2 class="mb-0 text-info">{{ uniqueVoters }}</h2>
+                <small class="text-muted">Unique Voters</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Stats Row -->
+          <div class="row text-center mb-4">
             <div class="col-6">
               <div class="p-3 bg-light rounded stats-card">
-                <h2 class="mb-0 text-primary">
-                  {{ totalVotes }}
-                </h2>
-                <small class="text-muted">Total Votes</small>
+                <h6 class="mb-1 text-warning">
+                  {{ mostPopularYear.year || "N/A" }}
+                </h6>
+                <small class="text-muted">Most Popular Year</small>
+                <div
+                  v-if="mostPopularYear.year"
+                  class="text-muted"
+                  style="font-size: 0.8rem"
+                >
+                  {{ mostPopularYear.count }} vote{{
+                    mostPopularYear.count !== 1 ? "s" : ""
+                  }}
+                </div>
               </div>
             </div>
             <div class="col-6">
               <div class="p-3 bg-light rounded stats-card">
-                <h2 class="mb-0 text-success">{{ uniqueYears.length }}</h2>
-                <small class="text-muted">Years Voted</small>
+                <h6 class="mb-1 text-danger">
+                  {{ mostFrequentVoter || "N/A" }}
+                </h6>
+                <small class="text-muted">Most Frequent Voter</small>
+                <div
+                  v-if="mostFrequentVoter"
+                  class="text-muted"
+                  style="font-size: 0.8rem"
+                >
+                  {{ mostFrequentVoterCount }} time{{
+                    mostFrequentVoterCount !== 1 ? "s" : ""
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voting Trend Chart -->
+          <div class="mb-4" v-if="sortedYears.length > 1">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-graph-up me-2"></i>
+              Voting Trend
+            </h6>
+            <div class="bg-light rounded p-3">
+              <Line :data="chartData" :options="chartOptions" />
+            </div>
+          </div>
+
+          <!-- First & Last Vote Info -->
+          <div class="row mb-4" v-if="firstVote && lastVote">
+            <div class="col-6">
+              <div class="p-3 bg-light rounded">
+                <h6 class="mb-2">
+                  <i class="bi bi-star-fill me-2 text-warning"></i>
+                  First Vote
+                </h6>
+                <div class="text-muted" style="font-size: 0.9rem">
+                  <strong>{{ firstVote.year }}</strong> by {{ firstVote.user }}
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 bg-light rounded">
+                <h6 class="mb-2">
+                  <i class="bi bi-clock-fill me-2 text-primary"></i>
+                  Latest Vote
+                </h6>
+                <div class="text-muted" style="font-size: 0.9rem">
+                  <strong>{{ lastVote.year }}</strong> by {{ lastVote.user }}
+                </div>
               </div>
             </div>
           </div>
@@ -185,6 +264,30 @@
 <script setup>
 import { ref, defineProps, onMounted, computed } from "vue";
 import { useStore } from "vuex";
+import { Line } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const imgError = ref(false);
 const store = useStore();
@@ -261,6 +364,172 @@ const totalVotes = computed(() => {
 const uniqueYears = computed(() => {
   return sortedYears.value;
 });
+
+// Count unique voters across all years
+const uniqueVoters = computed(() => {
+  if (!props.selectedSong) return 0;
+
+  const voterIds = new Set();
+  Object.values(votesByYear.value).forEach((yearVotes) => {
+    yearVotes.forEach((vote) => voterIds.add(vote.userId));
+  });
+
+  return voterIds.size;
+});
+
+// Find most popular year (year with most votes)
+const mostPopularYear = computed(() => {
+  if (!props.selectedSong || sortedYears.value.length === 0) {
+    return { year: null, count: 0 };
+  }
+
+  let maxYear = sortedYears.value[0];
+  let maxCount = votesByYear.value[maxYear].length;
+
+  sortedYears.value.forEach((year) => {
+    const count = votesByYear.value[year].length;
+    if (count > maxCount) {
+      maxCount = count;
+      maxYear = year;
+    }
+  });
+
+  return { year: maxYear, count: maxCount };
+});
+
+// Find most frequent voter
+const mostFrequentVoter = computed(() => {
+  if (!props.selectedSong) return null;
+
+  const voterCounts = {};
+  Object.values(votesByYear.value).forEach((yearVotes) => {
+    yearVotes.forEach((vote) => {
+      voterCounts[vote.userId] = (voterCounts[vote.userId] || 0) + 1;
+    });
+  });
+
+  let maxUserId = null;
+  let maxCount = 0;
+
+  Object.entries(voterCounts).forEach(([userId, count]) => {
+    if (count > maxCount) {
+      maxCount = count;
+      maxUserId = userId;
+    }
+  });
+  return maxUserId ? getUserName(maxUserId) : null;
+});
+
+const mostFrequentVoterCount = computed(() => {
+  if (!props.selectedSong || !mostFrequentVoter.value) return 0;
+
+  const voterCounts = {};
+  Object.values(votesByYear.value).forEach((yearVotes) => {
+    yearVotes.forEach((vote) => {
+      voterCounts[vote.userId] = (voterCounts[vote.userId] || 0) + 1;
+    });
+  });
+
+  return Math.max(...Object.values(voterCounts));
+});
+
+// Get first vote info
+const firstVote = computed(() => {
+  if (!props.selectedSong || sortedYears.value.length === 0) return null;
+
+  const earliestYear = sortedYears.value[sortedYears.value.length - 1];
+  const votes = votesByYear.value[earliestYear];
+
+  if (!votes || votes.length === 0) return null;
+
+  return {
+    year: earliestYear,
+    user: getUserName(votes[0].userId),
+  };
+});
+
+// Get last vote info
+const lastVote = computed(() => {
+  if (!props.selectedSong || sortedYears.value.length === 0) return null;
+
+  const latestYear = sortedYears.value[0];
+  const votes = votesByYear.value[latestYear];
+
+  if (!votes || votes.length === 0) return null;
+
+  return {
+    year: latestYear,
+    user: getUserName(votes[votes.length - 1].userId),
+  };
+});
+
+// Chart data
+const chartData = computed(() => {
+  if (!props.selectedSong || sortedYears.value.length === 0) {
+    return {
+      labels: [],
+      datasets: [],
+    };
+  }
+  const yearsChronological = [...sortedYears.value].reverse();
+
+  return {
+    labels: yearsChronological,
+    datasets: [
+      {
+        label: "Votes per Year",
+        data: yearsChronological.map((year) => votesByYear.value[year].length),
+        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: true,
+        tension: 0.4,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointBackgroundColor: "rgb(75, 192, 192)",
+        pointBorderColor: "#fff",
+        pointBorderWidth: 2,
+      },
+    ],
+  };
+});
+
+// Chart options
+const chartOptions = computed(() => ({
+  responsive: true,
+  maintainAspectRatio: true,
+  aspectRatio: 2,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context) {
+          return `${context.parsed.y} vote${context.parsed.y !== 1 ? "s" : ""}`;
+        },
+      },
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        stepSize: 1,
+        precision: 0,
+      },
+      title: {
+        display: true,
+        text: "Number of Votes",
+      },
+    },
+    x: {
+      title: {
+        display: true,
+        text: "Year",
+      },
+    },
+  },
+}));
 
 onMounted(() => {
   const songDetailsModal = document.getElementById("songDetailsModal");
