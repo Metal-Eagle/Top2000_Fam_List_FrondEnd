@@ -157,6 +157,92 @@
             </div>
           </div>
 
+          <!-- Artist Statistics Section -->
+          <div class="mb-4" v-if="artistStats">
+            <h6 class="fw-bold mb-3">
+              <i class="bi bi-music-note-beamed me-2"></i>
+              Artist Statistics - {{ props.selectedSong.artist }}
+            </h6>
+
+            <div class="row text-center mb-3">
+              <div class="col-4">
+                <div class="p-3 bg-light rounded stats-card">
+                  <h4 class="mb-0 text-primary">
+                    {{ artistStats.totalSongs }}
+                  </h4>
+                  <small class="text-muted">Total Songs Voted</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 bg-light rounded stats-card">
+                  <h4 class="mb-0 text-success">
+                    {{ artistStats.totalVotes }}
+                  </h4>
+                  <small class="text-muted">Total Artist Votes</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 bg-light rounded stats-card">
+                  <h4 class="mb-0 text-info">{{ artistStats.uniqueVoters }}</h4>
+                  <small class="text-muted">Unique Voters</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-12">
+                <div class="p-3 bg-light rounded">
+                  <h6 class="mb-2">
+                    <i class="bi bi-trophy-fill me-2 text-warning"></i>
+                    Biggest Fan
+                  </h6>
+                  <div v-if="artistStats.topVoter">
+                    <strong class="text-primary">{{
+                      artistStats.topVoter.name
+                    }}</strong>
+                    <span class="text-muted ms-2">
+                      - {{ artistStats.topVoter.count }} vote{{
+                        artistStats.topVoter.count !== 1 ? "s" : ""
+                      }}
+                      on {{ artistStats.topVoter.songCount }} song{{
+                        artistStats.topVoter.songCount !== 1 ? "s" : ""
+                      }}
+                    </span>
+                  </div>
+                  <div v-else class="text-muted">No data available</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top voted songs by this artist -->
+            <div
+              v-if="artistStats.topSongs && artistStats.topSongs.length > 0"
+              class="mb-3"
+            >
+              <h6 class="mb-2">
+                <i class="bi bi-star-fill me-2 text-warning"></i>
+                Most Voted Songs by {{ props.selectedSong.artist }}
+              </h6>
+              <div class="list-group">
+                <div
+                  v-for="(song, index) in artistStats.topSongs"
+                  :key="index"
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div>
+                    <span class="badge bg-secondary me-2">{{ index + 1 }}</span>
+                    <strong>{{ song.title }}</strong>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">
+                    {{ song.voteCount }} vote{{
+                      song.voteCount !== 1 ? "s" : ""
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- First & Last Vote Info -->
           <div class="row mb-4" v-if="firstVote && lastVote">
             <div class="col-6">
@@ -536,5 +622,91 @@ onMounted(() => {
   songDetailsModal.addEventListener("hidden.bs.modal", () => {
     atClose();
   });
+});
+
+// Artist Statistics
+const artistStats = computed(() => {
+  if (!props.selectedSong) return null;
+
+  const artist = props.selectedSong.artist;
+
+  // Get all songs by this artist from the store
+  const allSongs = store.getters.getAllSongs || [];
+  const artistSongs = allSongs.filter((song) => song.artist === artist);
+
+  if (artistSongs.length === 0) return null;
+
+  // Collect all votes for this artist
+  const voterStats = {};
+  let totalVotes = 0;
+  const songVoteCounts = [];
+
+  artistSongs.forEach((song) => {
+    const votingHistory = store.getters.getSongVotingHistory(
+      song.title,
+      song.artist
+    );
+    let songTotalVotes = 0;
+
+    Object.values(votingHistory).forEach((yearVotes) => {
+      yearVotes.forEach((vote) => {
+        // Track votes per user
+        if (!voterStats[vote.userId]) {
+          voterStats[vote.userId] = {
+            count: 0,
+            songs: new Set(),
+          };
+        }
+        voterStats[vote.userId].count++;
+        voterStats[vote.userId].songs.add(song.title);
+        songTotalVotes++;
+        totalVotes++;
+      });
+    });
+
+    if (songTotalVotes > 0) {
+      songVoteCounts.push({
+        title: song.title,
+        voteCount: songTotalVotes,
+      });
+    }
+  });
+
+  // Find top voter
+  let topVoter = null;
+  let maxVotes = 0;
+  let topVoterId = null;
+
+  Object.entries(voterStats).forEach(([userId, stats]) => {
+    if (stats.count > maxVotes) {
+      maxVotes = stats.count;
+      topVoterId = userId;
+    }
+  });
+
+  if (topVoterId) {
+    topVoter = {
+      name: getUserName(topVoterId),
+      count: voterStats[topVoterId].count,
+      songCount: voterStats[topVoterId].songs.size,
+    };
+  }
+
+  // Sort songs by vote count and get the top 5, remove the same title songs
+  const topSongs = songVoteCounts
+    .sort((a, b) => b.voteCount - a.voteCount)
+    .filter(
+      (song, index, self) =>
+        index === self.findIndex((s) => s.title === song.title)
+    )
+    .slice(0, 5);
+
+  return {
+    totalSongs: artistSongs.length,
+    totalVotes: totalVotes,
+    uniqueVoters: Object.keys(voterStats).length,
+    topVoter: topVoter,
+    topSongs: topSongs,
+  };
 });
 </script>

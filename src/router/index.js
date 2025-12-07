@@ -8,6 +8,8 @@ import dashboardList from "@/views/dashboardList.vue";
 import dashboardTopList from "@/views/dashboardTopList.vue";
 import dashboardTopSongsThisYear from "@/views/dashboardTopSongsThisYear.vue";
 import addFamily from "@/views/addFamily.vue";
+import familyStatistics from "@/views/familyStatistics.vue";
+
 import PageNotFound from '@/views/PageNotFound.vue'
 
 import {
@@ -51,6 +53,16 @@ const routes = [{
     meta: {
         title: `Dashboard top songs - ${process.env.VUE_APP_TITLE}`,
         description: "Show the top songs of this year",
+    }
+},
+{
+    path: "/familyStatistics/:id",
+    name: `Family Statistics`,
+    showInNav: true,
+    component: familyStatistics,
+    meta: {
+        title: `Family Statistics - ${process.env.VUE_APP_TITLE}`,
+        description: "Show family statistics",
     }
 },
 {
