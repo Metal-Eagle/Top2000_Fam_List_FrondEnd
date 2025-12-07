@@ -146,6 +146,38 @@
             </div>
           </div>
 
+          <!-- Song Longevity & Comeback Info -->
+          <div class="row text-center mb-4">
+            <div class="col-6">
+              <div class="p-3 bg-light rounded stats-card">
+                <h6 class="mb-1 text-success">
+                  {{ songLongevity.years }} / {{ songLongevity.totalYears }}
+                </h6>
+                <small class="text-muted">Song Longevity (Years Voted)</small>
+                <div
+                  v-if="songLongevity.isEvergreen"
+                  class="text-success"
+                  style="font-size: 0.8rem"
+                ></div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 bg-light rounded stats-card">
+                <h6 class="mb-1 text-info">
+                  {{ songLongevity.isComeback ? "Yes" : "No" }}
+                </h6>
+                <small class="text-muted">Comeback Song</small>
+                <div
+                  v-if="songLongevity.isComeback"
+                  class="text-muted"
+                  style="font-size: 0.8rem"
+                >
+                  Returned after gap
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Voting Trend Chart -->
           <div class="mb-4" v-if="sortedYears.length > 1">
             <h6 class="fw-bold mb-3">
@@ -517,6 +549,43 @@ const mostFrequentVoterCount = computed(() => {
   });
 
   return Math.max(...Object.values(voterCounts));
+});
+
+// Calculate song longevity
+const songLongevity = computed(() => {
+  if (!props.selectedSong || sortedYears.value.length === 0) {
+    return {
+      years: 0,
+      totalYears: 0,
+      isEvergreen: false,
+      isComeback: false,
+    };
+  }
+
+  const allSongs = store.getters.getAllSongs || [];
+  const uniqueYears = new Set(allSongs.map((s) => s.voteYear));
+  const totalYears = uniqueYears.size;
+  const yearsVoted = sortedYears.value.length;
+  const isEvergreen = yearsVoted === totalYears;
+
+  // Check if it's a comeback song
+  let isComeback = false;
+  if (sortedYears.value.length > 1) {
+    const sortedChronological = [...sortedYears.value].sort((a, b) => a - b);
+    for (let i = 1; i < sortedChronological.length; i++) {
+      if (sortedChronological[i] - sortedChronological[i - 1] > 1) {
+        isComeback = true;
+        break;
+      }
+    }
+  }
+
+  return {
+    years: yearsVoted,
+    totalYears: totalYears,
+    isEvergreen: isEvergreen,
+    isComeback: isComeback,
+  };
 });
 
 // Get first vote info

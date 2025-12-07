@@ -84,6 +84,125 @@
         </div>
       </div>
     </div>
+
+    <!-- Evergreen & Loyalty Metrics -->
+    <div class="row mb-4">
+      <div class="col-3">
+        <div class="p-3 bg-light rounded stats-card">
+          <h4 class="mb-0 text-success">{{ stats.evergreenSongs }}</h4>
+          <small class="text-muted">Evergreen Songs</small>
+          <div class="text-muted" style="font-size: 0.8rem">
+            Voted Every Year
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="p-3 bg-light rounded stats-card">
+          <h4 class="mb-0 text-primary">{{ stats.evergreenArtists }}</h4>
+          <small class="text-muted">Evergreen Artists</small>
+          <div class="text-muted" style="font-size: 0.8rem">
+            Appeared Every Year
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="p-3 bg-light rounded stats-card">
+          <h4 class="mb-0 text-warning">{{ stats.oneHitWonders }}</h4>
+          <small class="text-muted">One-Hit Wonders</small>
+          <div class="text-muted" style="font-size: 0.8rem">
+            Voted Only Once
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="p-3 bg-light rounded stats-card">
+          <h4 class="mb-0 text-info">{{ stats.comebackSongs }}</h4>
+          <small class="text-muted">Comeback Songs</small>
+          <div class="text-muted" style="font-size: 0.8rem">
+            Returned After Gap
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Most Consistent Songs & Artists -->
+    <div class="row mb-4">
+      <div class="col-6">
+        <div class="p-3 bg-light rounded">
+          <h5 class="mb-3">
+            <i class="bi bi-arrow-repeat me-2 text-success"></i>
+            Most Consistent Songs
+          </h5>
+          <div class="list-group">
+            <div
+              v-for="(song, index) in stats.mostConsistentSongs.slice(0, 5)"
+              :key="index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <strong>{{ song.title }}</strong>
+                <span class="text-muted ms-2">by {{ song.artist }}</span>
+              </div>
+              <span class="badge bg-success rounded-pill">
+                {{ song.yearCount }}/{{ stats.totalYears }} years
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-3 bg-light rounded">
+          <h5 class="mb-3">
+            <i class="bi bi-arrow-repeat me-2 text-primary"></i>
+            Most Consistent Artists
+          </h5>
+          <div class="list-group">
+            <div
+              v-for="(artist, index) in stats.mostConsistentArtists.slice(0, 5)"
+              :key="index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <strong>{{ artist.name }}</strong>
+              </div>
+              <span class="badge bg-primary rounded-pill">
+                {{ artist.yearCount }}/{{ stats.totalYears }} years
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Common Favourites -->
+    <div class="row mb-4" v-if="stats.commonFavourites.length > 0">
+      <div class="col-12">
+        <div class="p-3 bg-light rounded">
+          <h5 class="mb-3">
+            <i class="bi bi-heart-fill me-2 text-danger"></i>
+            Family Favourites (Voted by Multiple Members)
+          </h5>
+          <div class="list-group">
+            <div
+              v-for="(song, index) in stats.commonFavourites.slice(0, 5)"
+              :key="index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <strong>{{ song.title }}</strong>
+                <span class="text-muted ms-2">by {{ song.artist }}</span>
+              </div>
+              <span class="badge bg-danger rounded-pill">
+                {{ song.voterCount }} member{{
+                  song.voterCount !== 1 ? "s" : ""
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Chart.js grafs -->
     <div class="row mb-4">
       <div class="col-md-6 mb-4">
@@ -107,7 +226,10 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 bg-light rounded stats-card chart-container-small">
+        <div
+          class="p-3 bg-light rounded stats-card chart-container-scroll"
+          style="height: 500px; overflow-x: auto"
+        >
           <h5 class="mb-3 text-center">Songs Per Artist Distribution</h5>
           <canvas id="songsPerArtistChart"></canvas>
         </div>
@@ -249,15 +371,109 @@ export default {
           }
         : {};
 
+      // Calculate evergreen songs (voted every year)
+      const songsByYear = {};
+      songs.forEach((song) => {
+        const key = `${song.title}|${song.artist}`;
+        if (!songsByYear[key]) {
+          songsByYear[key] = new Set();
+        }
+        songsByYear[key].add(song.voteYear);
+      });
+      const uniqueYears = new Set(songs.map((s) => s.voteYear));
+      const totalYears = uniqueYears.size;
+      const evergreenSongs = Object.values(songsByYear).filter(
+        (years) => years.size === totalYears
+      ).length;
+
+      // Calculate evergreen artists (appeared every year)
+      const artistsByYear = {};
+      songs.forEach((song) => {
+        if (!artistsByYear[song.artist]) {
+          artistsByYear[song.artist] = new Set();
+        }
+        artistsByYear[song.artist].add(song.voteYear);
+      });
+      const evergreenArtists = Object.values(artistsByYear).filter(
+        (years) => years.size === totalYears
+      ).length;
+
+      // Calculate most consistent songs (by year frequency)
+      const mostConsistentSongs = Object.entries(songsByYear)
+        .map(([key, years]) => {
+          const [title, artist] = key.split("|");
+          return {
+            title,
+            artist,
+            yearCount: years.size,
+          };
+        })
+        .sort((a, b) => b.yearCount - a.yearCount);
+
+      // Calculate most consistent artists (by year frequency)
+      const mostConsistentArtists = Object.entries(artistsByYear)
+        .map(([name, years]) => ({
+          name,
+          yearCount: years.size,
+        }))
+        .sort((a, b) => b.yearCount - a.yearCount);
+
+      // Calculate one-hit wonders (voted exactly once across all years)
+      const oneHitWonders = Object.values(songStats).filter(
+        (song) => song.votes === 1
+      ).length;
+
+      // Calculate comeback songs (disappeared for years then reappeared)
+      const comebackSongs = Object.entries(songsByYear).filter(([, years]) => {
+        if (years.size < 2) return false;
+        const sortedYears = Array.from(years).sort((a, b) => a - b);
+        for (let i = 1; i < sortedYears.length; i++) {
+          if (sortedYears[i] - sortedYears[i - 1] > 1) {
+            return true;
+          }
+        }
+        return false;
+      }).length;
+
+      // Calculate common favourites (songs voted by multiple users in same year)
+      const songVoterCounts = {};
+      songs.forEach((song) => {
+        const key = `${song.title}|${song.artist}`;
+        if (!songVoterCounts[key]) {
+          songVoterCounts[key] = {
+            title: song.title,
+            artist: song.artist,
+            voters: new Set(),
+          };
+        }
+        songVoterCounts[key].voters.add(song.userId);
+      });
+      const commonFavourites = Object.values(songVoterCounts)
+        .filter((song) => song.voters.size > 1)
+        .map((song) => ({
+          title: song.title,
+          artist: song.artist,
+          voterCount: song.voters.size,
+        }))
+        .sort((a, b) => b.voterCount - a.voterCount);
+
       return {
         totalSongs: songs.length,
         totalArtists: artistsSet.size,
         totalUsers: users.length,
+        totalYears,
         mostVotedSong,
         topVoter,
         mostVotedArtist,
         artistWithMostSongs,
         userWithMostArtists,
+        evergreenSongs,
+        evergreenArtists,
+        mostConsistentSongs,
+        mostConsistentArtists,
+        oneHitWonders,
+        comebackSongs,
+        commonFavourites,
       };
     },
   },
@@ -421,7 +637,25 @@ export default {
             count: artistSongCounts[index],
           }))
           .sort((a, b) => b.count - a.count)
-          .slice(0, 20);
+          .slice(0, 20); // Show top 20 artists
+
+        // Use the same color palette as votesPerUserChart
+        const colorPalette = [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+        ];
+        const borderPalette = [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ];
 
         this.charts.songsPerArtist = new Chart(ctxSongsPerArtist, {
           type: "bar",
@@ -431,24 +665,52 @@ export default {
               {
                 label: "Unique Songs",
                 data: sortedArtistData.map((d) => d.count),
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1,
+                backgroundColor: sortedArtistData.map(
+                  (_, i) => colorPalette[i % colorPalette.length]
+                ),
+                borderColor: sortedArtistData.map(
+                  (_, i) => borderPalette[i % borderPalette.length]
+                ),
+                borderWidth: 2,
               },
             ],
           },
           options: {
             indexAxis: "y",
             responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return `${context.label}: ${context.parsed.x} songs`;
+                  },
+                },
+              },
+              title: {
+                display: true,
+                text: "Top 20 Artists by Unique Songs",
+                font: { size: 18 },
+              },
+            },
             scales: {
               x: {
                 beginAtZero: true,
                 title: {
                   display: true,
                   text: "Number of Unique Songs",
+                  font: { size: 14 },
                 },
+                ticks: { font: { size: 12 } },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Artist",
+                  font: { size: 14 },
+                },
+                ticks: { font: { size: 12 } },
               },
             },
           },

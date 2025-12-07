@@ -910,3 +910,8 @@ body[data-theme="dark"] {
   background-color: var(--highlight-color);
   color: var(--letter-color);
 }
+
+.chart-container-scroll {
+  min-height: 41.5rem;
+  overflow-y: auto;
+}
