@@ -89,17 +89,17 @@
     <div class="row mb-4">
       <div class="col-3">
         <div class="p-3 bg-light rounded stats-card">
-          <h4 class="mb-0 text-success">{{ stats.evergreenSongs }}</h4>
-          <small class="text-muted">Evergreen Songs</small>
+          <h4 class="mb-0 text-success">{{ stats.evergreenSongs.title }}</h4>
+          <small class="text-muted">By {{ stats.evergreenSongs.artist }}</small>
           <div class="text-muted" style="font-size: 0.8rem">
-            Voted Every Year
+            Voted Every Year (Song)
           </div>
         </div>
       </div>
       <div class="col-3">
         <div class="p-3 bg-light rounded stats-card">
-          <h4 class="mb-0 text-primary">{{ stats.evergreenArtists }}</h4>
-          <small class="text-muted">Evergreen Artists</small>
+          <h4 class="mb-0 text-primary">{{ stats.evergreenArtists.name }}</h4>
+          <small class="text-muted"> Artists</small>
           <div class="text-muted" style="font-size: 0.8rem">
             Appeared Every Year
           </div>
@@ -107,17 +107,17 @@
       </div>
       <div class="col-3">
         <div class="p-3 bg-light rounded stats-card">
-          <h4 class="mb-0 text-warning">{{ stats.oneHitWonders }}</h4>
-          <small class="text-muted">One-Hit Wonders</small>
+          <h4 class="mb-0 text-warning">{{ stats.oneHitWonders.title }}</h4>
           <div class="text-muted" style="font-size: 0.8rem">
-            Voted Only Once
+            {{ stats.oneHitWonders.artist }}
           </div>
+          <small class="text-muted">One-Hit Wonders Voted Only Once</small>
         </div>
       </div>
       <div class="col-3">
         <div class="p-3 bg-light rounded stats-card">
-          <h4 class="mb-0 text-info">{{ stats.comebackSongs }}</h4>
-          <small class="text-muted">Comeback Songs</small>
+          <h4 class="mb-0 text-info">{{ stats.comebackSongs.title }}</h4>
+          <small class="text-muted">Comeback Song</small>
           <div class="text-muted" style="font-size: 0.8rem">
             Returned After Gap
           </div>
@@ -382,56 +382,61 @@ export default {
         const normalizedArtist = this.normalizeArtistName(song.artist);
         const key = `${song.title}|${normalizedArtist}`;
         if (!songsByYear[key]) {
-          songsByYear[key] = new Set();
+          songsByYear[key] = {
+            title: song.title,
+            artist: normalizedArtist,
+            years: new Set(),
+          };
         }
-        songsByYear[key].add(song.voteYear);
+        songsByYear[key].years.add(song.voteYear);
       });
       const uniqueYears = new Set(songs.map((s) => s.voteYear));
       const totalYears = uniqueYears.size;
-      const evergreenSongs = Object.values(songsByYear).filter(
-        (years) => years.size === totalYears
-      ).length;
+      const evergreenSong = Object.values(songsByYear).filter(
+        (song) => song.years.size === totalYears
+      )[0];
 
       // Calculate evergreen artists (appeared every year)
       const artistsByYear = {};
       songs.forEach((song) => {
         const normalizedArtist = this.normalizeArtistName(song.artist);
         if (!artistsByYear[normalizedArtist]) {
-          artistsByYear[normalizedArtist] = new Set();
+          artistsByYear[normalizedArtist] = {
+            name: normalizedArtist,
+            years: new Set(),
+          };
         }
-        artistsByYear[normalizedArtist].add(song.voteYear);
+        artistsByYear[normalizedArtist].years.add(song.voteYear);
       });
-      const evergreenArtists = Object.values(artistsByYear).filter(
-        (years) => years.size === totalYears
-      ).length;
+      const evergreenArtist = Object.values(artistsByYear).filter(
+        (artist) => artist.years.size === totalYears
+      )[0];
 
       // Calculate most consistent songs (by year frequency)
-      const mostConsistentSongs = Object.entries(songsByYear)
-        .map(([key, years]) => {
-          const [title, artist] = key.split("|");
-          return {
-            title,
-            artist,
-            yearCount: years.size,
-          };
-        })
+      const mostConsistentSongs = Object.values(songsByYear)
+        .map((song) => ({
+          title: song.title,
+          artist: song.artist,
+          yearCount: song.years.size,
+        }))
         .sort((a, b) => b.yearCount - a.yearCount);
 
       // Calculate most consistent artists (by year frequency)
-      const mostConsistentArtists = Object.entries(artistsByYear)
-        .map(([name, years]) => ({
-          name,
-          yearCount: years.size,
+      const mostConsistentArtists = Object.values(artistsByYear)
+        .map((artist) => ({
+          name: artist.name,
+          yearCount: artist.years.size,
         }))
         .sort((a, b) => b.yearCount - a.yearCount);
 
       // Calculate one-hit wonders (voted exactly once across all years)
-      const oneHitWonders = Object.values(songStats).filter(
+      const oneHitWonder = Object.values(songStats).filter(
         (song) => song.votes === 1
-      ).length;
+      )[0];
 
       // Calculate comeback songs (disappeared for years then reappeared)
-      const comebackSongs = Object.entries(songsByYear).filter(([, years]) => {
+      const comebackSong = Object.values(songsByYear).filter((songData) => {
+        const years = songData.years;
         if (years.size < 2) return false;
         const sortedYears = Array.from(years).sort((a, b) => a - b);
         for (let i = 1; i < sortedYears.length; i++) {
@@ -440,7 +445,7 @@ export default {
           }
         }
         return false;
-      }).length;
+      })[0];
 
       // Calculate common favourites (songs voted by multiple users in same year)
       const songVoterCounts = {};
@@ -475,12 +480,12 @@ export default {
         mostVotedArtist,
         artistWithMostSongs,
         userWithMostArtists,
-        evergreenSongs,
-        evergreenArtists,
+        evergreenSongs: evergreenSong,
+        evergreenArtists: evergreenArtist,
         mostConsistentSongs,
         mostConsistentArtists,
-        oneHitWonders,
-        comebackSongs,
+        oneHitWonders: oneHitWonder,
+        comebackSongs: comebackSong,
         commonFavourites,
       };
     },
