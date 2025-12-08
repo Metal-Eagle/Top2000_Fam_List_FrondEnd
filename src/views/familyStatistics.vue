@@ -495,12 +495,6 @@ export default {
       this.renderCharts();
     });
   },
-  beforeUnmount() {
-    // Destroy charts to prevent memory leaks
-    Object.values(this.charts).forEach((chart) => {
-      if (chart) chart.destroy();
-    });
-  },
   methods: {
     normalizeArtistName(artist) {
       if (!artist) return artist;
