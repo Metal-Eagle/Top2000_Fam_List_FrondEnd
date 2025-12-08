@@ -1,4 +1,5 @@
 <template>
+  <td v-if="item.rank">{{ item.rank }}</td>
   <td>{{ item.artist }}</td>
   <td>{{ item.title }}</td>
   <td v-if="item.userId">{{ getUserById(item.userId).fullName }}</td>

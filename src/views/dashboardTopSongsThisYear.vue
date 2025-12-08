@@ -35,6 +35,7 @@ export default {
   data() {
     return {
       customColumns: [
+        { key: "rank", label: "Rank" },
         { key: "artist", label: "Artist" },
         { key: "title", label: "Title" },
         { key: "voters", label: "Voters" },

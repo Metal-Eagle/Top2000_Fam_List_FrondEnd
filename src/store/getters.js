@@ -274,7 +274,12 @@ const getters = {
       return b.lastYearVotes - a.lastYearVotes;
     });
 
-    return topSongsByYear.slice(0, 10);
+    const rankedSongs = topSongsByYear.slice(0, 10).map((song, index) => ({
+      ...song,
+      rank: index + 1
+    }));
+
+    return rankedSongs;
   },
 };
 
