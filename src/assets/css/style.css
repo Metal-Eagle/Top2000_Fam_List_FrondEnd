@@ -1079,3 +1079,19 @@ body[data-theme="dark"] {
 [data-theme="dark"] .p-3.bg-light.rounded {
   background-color: var(--highlight-color) !important;
 }
+
+.top-logo {
+  max-width: 260px;
+  height: auto;
+  margin: 0 auto 0.75rem auto;
+  display: block;
+  border-radius: 8px;
+  background: white;
+  padding: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+@media (max-width: 576px) {
+  .top-logo {
+    max-width: 180px;
+  }
+}

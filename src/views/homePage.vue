@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col-md-12 text-center mb-3">
       <div class="h2">Welcome</div>
+      <img :src="logo" alt="Top 2000 logo" class="top-logo img-fluid" />
     </div>
 
     <div class="col-md-9">
@@ -28,6 +29,7 @@
       <button
         class="btn btn-outline-main form-control"
         type="submit"
+        disabled="true"
         @click="gotoAddFamily"
       >
         Add
@@ -56,10 +58,12 @@
 
 <script>
 import { getSongByName } from "@/service/getData";
+import logo from "@/assets/logo.png";
 
 export default {
   data() {
     return {
+      logo,
       searchInput: null,
       error: {
         show: false,
