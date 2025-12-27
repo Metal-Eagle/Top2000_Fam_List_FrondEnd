@@ -117,9 +117,9 @@
       <div class="col-3">
         <div class="p-3 bg-light rounded stats-card">
           <h4 class="mb-0 text-info">{{ stats.comebackSongs.title }}</h4>
-          <small class="text-muted">Comeback Song</small>
+          <small class="text-muted">{{ stats.comebackSongs.artist }}</small>
           <div class="text-muted" style="font-size: 0.8rem">
-            Returned After Gap
+            Comeback Song Returned After Gap
           </div>
         </div>
       </div>
